@@ -30,6 +30,13 @@ function runPY(){
     window.Application.JSIDE.SelectedJSComponent.CodeModule.DeleteLines(0, 1)
   
 };
+function linux_runPY(){
+    var result = "function linux_runPY(){ Shell('" + GLOBAL_MAP.instDir + "/runPY.sh',  jsHide) ;}"          
+    window.Application.JSIDE.SelectedJSComponent.CodeModule.InsertLines(1,result) 
+    window.Application.Run('linux_runPY')
+    window.Application.JSIDE.SelectedJSComponent.CodeModule.DeleteLines(0, 1)
+  
+};
 
 // Storing global variables
 const GLOBAL_MAP = {};
@@ -51,12 +58,12 @@ function OnAddinLoad(ribbonUI) {
     GLOBAL_MAP.instDir = GLOBAL_MAP.isWin ?
         wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_${VERSION}` :
         wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_${VERSION}`;
-    GLOBAL_MAP.proxyPath = GLOBAL_MAP.instDir + GLOBAL_MAP.osSep + 'proxy.py';
+    GLOBAL_MAP.proxyPath = GLOBAL_MAP.instDir + GLOBAL_MAP.osSep + 'runPY.sh';
 
     // Start http proxy server
     if (GLOBAL_MAP.isWin) {
         if (window.Application.JSIDE == null) {
-            console.log(window.Application.JSIDE)
+            
             alert("Zotero加载项需要您授权\n请依次打开菜单栏的  工具--->宏安全性--->可靠发行商--->勾选 '信任对于wpsjs项目的访问',重启wps即可!")
           
         } 
@@ -66,6 +73,15 @@ function OnAddinLoad(ribbonUI) {
             runZotero()
               
         }
+    }else{
+        if (window.Application.JSIDE == null) {
+         
+            alert("Zotero加载项需要您授权\n请依次打开菜单栏的  工具--->宏安全性--->可靠发行商--->勾选 '信任对于wpsjs项目的访问',重启wps即可!")
+          
+        } 
+
+        linux_runPY()
+
     }
    
     // Exit the proxy server when the application quits.
