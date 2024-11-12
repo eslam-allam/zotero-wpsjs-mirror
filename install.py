@@ -9,6 +9,14 @@ import stat
 import subprocess 
 from proxy import stop_proxy
 
+# 导入用于显示弹窗的消息框模块
+if platform.system() == 'Windows':
+    import tkinter
+    from tkinter import messagebox
+else:
+    import gi
+    gi.require_version('Gtk', '3.0')
+    from gi.repository import Gtk
 
 # Prevent running as root on Linux
 if platform.system() == 'Linux' and os.environ['USER'] == 'root':
@@ -163,6 +171,23 @@ if os.name == 'nt':
             with open(pref_fn, 'w') as f:
                 f.write(content)
 
+# 所有安装步骤完成后，添加这一段代码来显示弹窗
+if platform.system() == 'Windows':
+    # 对于 Windows 使用 tkinter 创建弹窗
+    root = tkinter.Tk()
+    root.withdraw()  # 隐藏主窗口
+    messagebox.showinfo('安装成功', '所有操作已完成，现在可以使用插件了！')
+    root.destroy()
+else:
+    # 对于 Linux 使用 GTK 创建弹窗
+    dialog = Gtk.MessageDialog(
+        flags=0,
+        type=Gtk.MessageType.INFO,
+        buttons=Gtk.ButtonsType.OK,
+        message_format="所有操作已完成，现在可以使用插件了！"
+    )
+    dialog.run()
+    dialog.destroy()
 
 print('All done, enjoy!')
 print('(run ./install.py -u to uninstall)')
