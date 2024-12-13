@@ -9,14 +9,6 @@ import stat
 import subprocess 
 from proxy import stop_proxy
 
-# 导入用于显示弹窗的消息框模块
-if platform.system() == 'Windows':
-    import tkinter
-    from tkinter import messagebox
-else:
-    import gi
-    gi.require_version('Gtk', '3.0')
-    from gi.repository import Gtk
 
 # Prevent running as root on Linux
 if platform.system() == 'Linux' and os.environ['USER'] == 'root':
@@ -53,18 +45,21 @@ if platform.system() == 'Windows':
 
 
 # File & directory paths
+# 检测操作系统并设置相应的插件路径
 PKG_PATH = os.path.dirname(os.path.abspath(__file__))
 with open(PKG_PATH + os.path.sep + 'version.js') as f:
     VERSION = f.readlines()[0].split('=')[-1].strip()[1:-1]
 APPNAME = 'wps-zotero_{}'.format(VERSION)
-if os.name == 'posix':
-    ADDON_PATH = os.environ['HOME'] + '/.local/share/Kingsoft/wps/jsaddons'
-else:
-    ADDON_PATH = os.environ['APPDATA'] + '\\kingsoft\\wps\\jsaddons'
+if platform.system() == 'Darwin':  # macOS
+    ADDON_PATH = os.path.expanduser('~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons')
+elif os.name == 'posix':  # Linux
+    ADDON_PATH = os.path.join(os.environ['HOME'], '.local/share/Kingsoft/wps/jsaddons')
+else:  # Windows
+    ADDON_PATH = os.path.join(os.environ['APPDATA'], 'kingsoft', 'wps', 'jsaddons')
+
+# 定义 XML 文件路径
 XML_PATHS = {
-    'jsplugins': ADDON_PATH + os.path.sep + 'jsplugins.xml',
-    'publish': ADDON_PATH + os.path.sep + 'publish.xml',
-    'authwebsite': ADDON_PATH + os.path.sep + 'authwebsite.xml'
+    'publish': os.path.join(ADDON_PATH, 'publish.xml'),
 }
 PROXY_PATH = ADDON_PATH + os.path.sep + 'proxy.py'
 
@@ -109,25 +104,14 @@ print('Installing')
 
 
 # Create necessary directory and files
-if not os.path.exists(ADDON_PATH):
-    os.makedirs(ADDON_PATH, exist_ok=True)
-if not os.path.exists(XML_PATHS['jsplugins']):
-    with open(XML_PATHS['jsplugins'], 'w') as f:
-        f.write('''<jsplugins>
-</jsplugins>
-''')
+
 if not os.path.exists(XML_PATHS['publish']):
     with open(XML_PATHS['publish'], 'w') as f:
         f.write('''<?xml version="1.0" encoding="UTF-8"?>
 <jsplugins>
 </jsplugins>
 ''')
-if not os.path.exists(XML_PATHS['authwebsite']):
-    with open(XML_PATHS['authwebsite'], 'w') as f:
-        f.write('''<?xml version="1.0" encoding="UTF-8"?>
-<websites>
-</websites>
-''')
+
 
 
 # Copy to jsaddons
@@ -146,12 +130,9 @@ def register(fp, tagname, record):
     with open(fp, 'w') as f:
         f.write(content[:i] + record + os.linesep + content[i:])
 
-rec = '<jsplugin name="wps-zotero" type="wps" url="http://127.0.0.1:3889/" version="{}"/>'.format(VERSION)
-register(XML_PATHS['jsplugins'], 'jsplugins', rec)
+
 rec = '<jsplugin url="http://127.0.0.1:3889/" type="wps" enable="enable_dev" install="null" version="{}" name="wps-zotero"/>'.format(VERSION)
 register(XML_PATHS['publish'], 'jsplugins', rec)
-rec = '<website origin="null" name="wps-zotero" status="enable"/>'
-register(XML_PATHS['authwebsite'], 'websites', rec)
 
 
 # Alleviate the "Zotero window not brought to front" problem.
@@ -171,23 +152,7 @@ if os.name == 'nt':
             with open(pref_fn, 'w') as f:
                 f.write(content)
 
-# 所有安装步骤完成后，添加这一段代码来显示弹窗
-if platform.system() == 'Windows':
-    # 对于 Windows 使用 tkinter 创建弹窗
-    root = tkinter.Tk()
-    root.withdraw()  # 隐藏主窗口
-    messagebox.showinfo('安装成功', '所有操作已完成，现在可以使用插件了！')
-    root.destroy()
-else:
-    # 对于 Linux 使用 GTK 创建弹窗
-    dialog = Gtk.MessageDialog(
-        flags=0,
-        type=Gtk.MessageType.INFO,
-        buttons=Gtk.ButtonsType.OK,
-        message_format="所有操作已完成，现在可以使用插件了！"
-    )
-    dialog.run()
-    dialog.destroy()
+
 
 print('All done, enjoy!')
 print('(run ./install.py -u to uninstall)')
