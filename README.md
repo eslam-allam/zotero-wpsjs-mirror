@@ -8,7 +8,7 @@
 
 zotero-wpsjs文字加载项，一款 学术论文管理 和 wps文字 交互插件
 
-支持平台:Windows & Linux
+支持平台:Windows & Linux & Mac
 
 #### 软件架构
 
@@ -20,7 +20,7 @@ wpsjs 加载项和 python
 
 #### 安装教程
 
-windows平台
+Windows平台
 
   wps相关设置---
 
@@ -32,7 +32,7 @@ windows平台
 
    3.运行项目文件夹内的  安装.exe
 
-linux平台
+Linux平台
 
   wps相关设置---
 
@@ -46,6 +46,18 @@ linux平台
 
    3.执行项目文件夹内的 install.py
 
+   Mac平台
+
+  wps相关设置---
+
+   1.工具--->宏安全性--->可靠发行商--->勾选 '信任对于wpsjs项目的访问'
+
+   安装---
+
+   mac平台自带python版本有老有新，请自行尝试安装，如果报错请自行安装python3
+
+   2.执行项目文件夹内的 install.py
+
 #### 参与贡献
 
 1.  Fork 本仓库
@@ -57,7 +69,7 @@ linux平台
 
 你有任何建议或意见 可以通过以下方式联系我
 
-qq：897081475
+qq:897081475
 
 qq群:1029775161
 
