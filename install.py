@@ -104,7 +104,8 @@ print('Installing')
 
 
 # Create necessary directory and files
-
+if not os.path.exists(ADDON_PATH):
+    os.makedirs(ADDON_PATH, exist_ok=True)
 if not os.path.exists(XML_PATHS['publish']):
     with open(XML_PATHS['publish'], 'w') as f:
         f.write('''<?xml version="1.0" encoding="UTF-8"?>
@@ -155,4 +156,4 @@ if os.name == 'nt':
 
 
 print('All done, enjoy!')
-print('(run ./install.py -u to uninstall)')
+print('(run ./install.py -u to uninstall  or  python install.py -u to uninstall)')
