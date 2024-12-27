@@ -34,11 +34,12 @@ function OnAddinLoad(ribbonUI) {
         alert("Zotero加载项需要您授权\n请依次打开菜单栏的  工具--->宏安全性--->可靠发行商--->勾选 '信任对于wpsjs项目的访问',重启wps即可!")
           
     } 
+  
      //系统检测
     detectOS()
-   
+
     // Exit the proxy server when the application quits.
-    Application.ApiEvent.AddApiEventListener("ApplicationQuit", () => {
+   wps.ApiEvent.AddApiEventListener("ApplicationQuit", () => {
      
         postRequestXHR('http://127.0.0.1:21931/stopproxy', null);
 
@@ -109,15 +110,15 @@ function GetImage(control) {
     const eleId = control.Id
     switch (eleId) {
         case "btnAddEditCitation":
-            return "images/addEditCitation.svg";
+            return "images/addEditCitation.png";
         case "btnAddEditBib":
-            return "images/addEditBib.svg";
+            return "images/addEditBib.png";
         case "btnRefresh":
             return "images/refresh.svg";
         case "btnPref":
-            return "images/pref.svg";
+            return "images/pref.png";
         case "btnAddNote":
-            return "images/addNote.svg";
+            return "images/addNote.png";
         case "btnUnlink":
             return "images/unlink.svg";
         case "btnExport":

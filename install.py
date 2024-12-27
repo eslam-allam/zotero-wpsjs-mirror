@@ -52,7 +52,7 @@ with open(PKG_PATH + os.path.sep + 'version.js') as f:
 APPNAME = 'wps-zotero_{}'.format(VERSION)
 if platform.system() == 'Darwin':  # macOS
     ADDON_PATH = os.path.expanduser('~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons')
-elif os.name == 'posix':  # Linux
+elif platform.system() == 'Linux':  # Linux
     ADDON_PATH = os.path.join(os.environ['HOME'], '.local/share/Kingsoft/wps/jsaddons')
 else:  # Windows
     ADDON_PATH = os.path.join(os.environ['APPDATA'], 'kingsoft', 'wps', 'jsaddons')

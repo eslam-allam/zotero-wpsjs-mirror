@@ -3,6 +3,7 @@ const winPath= wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_${V
 
 const linuxPath=wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_${VERSION}`;
 
+const macPath=wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_${VERSION}`;
 
 //系统检测
 function detectOS() {
@@ -15,6 +16,8 @@ function detectOS() {
         runServers("runPY",linuxPath,"/runPY.sh",'jsHide')
         return ;
     }  
+    runServers("runPY",'/usr/local/bin/python3  '+macPath,"/proxy.py",'jsHide');
+    //wps.OAAssist.ShellExecute('python3','~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.local/share/Kingsoft/wps/jsaddons/wps-zotero_1.1.0/hello.py')
 };
 //运行zotero
 function runZotero(){
