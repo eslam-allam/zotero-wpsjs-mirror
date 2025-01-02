@@ -10,7 +10,10 @@ function detectOS() {
     var userAgent = navigator.userAgent;
     if (userAgent.indexOf("Windows") !== -1) {
         runServers("runProxy",winPath,"/proxy.exe",'jsHide');
-        runZotero();
+        if(window.Application.FileSystem.Exists('C:/Program Files/Zotero')){
+            runZotero();
+        }
+       
         return ;
     } else if (userAgent.indexOf("Linux") !== -1) {
         runServers("runPY",linuxPath,"/runPY.sh",'jsHide')
