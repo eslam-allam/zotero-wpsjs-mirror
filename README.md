@@ -51,12 +51,14 @@ Linux平台
    安装---
 
    mac平台自带python版本有老有新，请自行尝试安装，如果报错请自行安装python3
+   
+   第一次运行会提示打开脚本，请点击打开
 
    2.执行项目文件夹内的 install.py
 
 #### 致谢 
   由于2024年左右，wps官方进行了加载项的代码审查，导致部分接口下线，同年6月，因zotero qq交流群1029775161的群主bigben446求助，得以认识此项目，经过修修补补，于12月27日完成Mac端的适配工作。
-  感谢github：tankwyn Ooo、l0o0两位作者前期所付出巨大努力，此项目(https://github.com/tankwyn/WPS-Zotero)方能和用户见面，感谢wps官方的倾力支持，感谢所有为此项目努力和使用的人！！
+  感谢github：tankwyn Ooo、l0o0两位作者前期所付出巨大努力，此项目 (https://github.com/tankwyn/WPS-Zotero) 方能和用户见面，感谢wps官方的倾力支持，感谢所有为此项目努力和使用的人！！
 
 
 #### 与我联系

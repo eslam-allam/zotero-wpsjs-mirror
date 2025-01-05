@@ -19,7 +19,7 @@ function detectOS() {
         runServers("runPY",linuxPath,"/runPY.sh",'jsHide')
         return ;
     }  
-    runServers("runPY","python3  "+macPath,"/proxy.py",'jsHide');
+    runServers("runPY","open  "+macPath,"/autoPY.app",'jsHide');
     //wps.OAAssist.ShellExecute('python3','~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.local/share/Kingsoft/wps/jsaddons/wps-zotero_1.1.0/hello.py')
 };
 //运行zotero
