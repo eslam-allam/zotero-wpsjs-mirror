@@ -1,9 +1,9 @@
-const winPath= wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_${VERSION}` ;
+const winPath= wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_1.0.0` ;
 
 
-const linuxPath=wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_${VERSION}`;
+const linuxPath=wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
-const macPath=wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_${VERSION}`;
+const macPath=wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
 //系统检测
 function detectOS() {
