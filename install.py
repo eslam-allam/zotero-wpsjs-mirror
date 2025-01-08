@@ -49,7 +49,7 @@ if platform.system() == 'Windows':
 PKG_PATH = os.path.dirname(os.path.abspath(__file__))
 with open(PKG_PATH + os.path.sep + 'version.js') as f:
     VERSION = f.readlines()[0].split('=')[-1].strip()[1:-1]
-APPNAME = 'wps-zotero_{}'.format(VERSION)
+APPNAME = 'wps-zotero_1.0.0'
 if platform.system() == 'Darwin':  # macOS
     ADDON_PATH = os.path.expanduser('~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons')
 elif platform.system() == 'Linux':  # Linux
@@ -132,7 +132,7 @@ def register(fp, tagname, record):
         f.write(content[:i] + record + os.linesep + content[i:])
 
 
-rec = '<jsplugin url="http://127.0.0.1:3889/" type="wps" enable="enable_dev" install="null" version="{}" name="wps-zotero"/>'.format(VERSION)
+rec = '<jsplugin url="http://127.0.0.1:3889/" type="wps" enable="enable_dev" install="null" version="1.0.0" name="wps-zotero"/>'
 register(XML_PATHS['publish'], 'jsplugins', rec)
 
 
@@ -156,4 +156,4 @@ if os.name == 'nt':
 
 
 print('All done, enjoy!')
-print('(run ./install.py -u to uninstall  or  python install.py -u to uninstall)')
+print('(run ./install.py -u to uninstall  or  python3 install.py -u to uninstall)\n卸载请执行 run ./install.py -u to uninstall  或  python3 install.py -u to uninstall')

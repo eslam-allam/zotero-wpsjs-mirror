@@ -51,26 +51,7 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>on runPY()
-    -- 获取当前脚本的路径
-    set scriptPath to POSIX path of (path to me as text)
-    
-    -- 获取脚本所在的目录
-    set scriptDirectory to do shell script "dirname " &amp; quoted form of scriptPath
-    
-    -- 拼接 proxy.py 的路径
-    set proxyPath to scriptDirectory &amp; "/proxy.py"
-    
-    -- 使用 do shell script 来执行 python 脚本
-    try
-        do shell script "python3 " &amp; quoted form of proxyPath
-    on error errorMessage
-        display dialog "Error: " &amp; errorMessage buttons {"OK"} default button "OK"
-    end try
-end runPY
-
--- 调用函数
-runPY()</string>
+					<string>-- 定义一个函数来运行 Python 脚本on runPY()	-- 使用 do shell script 来执行 macProxy	try		do shell script "python3  ~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons/wps-zotero_1.0.0/proxy.py"	on error errorMessage		display dialog "Error: " &amp; errorMessage buttons {"OK"} default button "OK"	end tryend runPY-- 调用函数runPY()</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -87,15 +68,15 @@ runPY()</string>
 				<key>Class Name</key>
 				<string>RunScriptAction</string>
 				<key>InputUUID</key>
-				<string>495B4C17-567F-4086-8B9D-72AC3F5969F7</string>
+				<string>F519E3BC-1F69-4D5D-A09E-E507C8AA8E15</string>
 				<key>Keywords</key>
 				<array>
 					<string>运行</string>
 				</array>
 				<key>OutputUUID</key>
-				<string>FF321CBF-F179-4777-8BDC-407D0BE86538</string>
+				<string>05B35CC9-A3CF-4AC3-ABD7-50437FA74216</string>
 				<key>UUID</key>
-				<string>3D0921D9-3D07-4D23-817F-32E5FFB3B09F</string>
+				<string>85D46F94-F4AF-4E04-ACCC-4D152ECC77D7</string>
 				<key>UnlocalizedApplications</key>
 				<array>
 					<string>Automator</string>
@@ -121,8 +102,6 @@ end run</string>
 						<string>0</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
