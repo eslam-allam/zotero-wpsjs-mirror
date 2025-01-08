@@ -14,6 +14,10 @@ wpsjs 加载项和 python
 
 本插件需要用户的授权才能正常使用
 
+由于未知原因，Mac端项目无法正常使用，Mac用户请使用链接内版本 链接：https://pan.baidu.com/s/1L4Ltr8woL1hNA8cJreKBVw 
+提取码：A3p6 
+复制这段内容打开「百度网盘APP 即可获取」
+
 #### 安装教程
 
 Windows平台
