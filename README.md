@@ -14,11 +14,13 @@ wpsjs 加载项和 python
 
 本插件需要用户的授权才能正常使用
 
-由于未知原因，Gitee项目无法在mac端使用，Mac用户请使用链接内版本 链接：https://pan.baidu.com/s/1L4Ltr8woL1hNA8cJreKBVw 
-提取码：A3p6 
-复制这段内容打开「百度网盘APP 即可获取」
+最低兼容版本
+
+Mac端 Wps6.15   Zotero 7.x
 
 #### 安装教程
+
+视频教程 B站 【Zotero for wps加载项-哔哩哔哩】 https://b23.tv/umvN65m
 
 Windows平台
 
@@ -62,7 +64,7 @@ Linux平台
 
 #### 致谢 
   由于2024年左右，wps官方进行了加载项的代码审查，导致部分接口下线，同年6月，因zotero qq交流群1029775161的群主bigben446求助，得以认识此项目，经过修修补补，于12月27日完成Mac端的适配工作。
-  感谢github：tankwyn Ooo、l0o0两位作者前期所付出巨大努力，此项目 (https://github.com/tankwyn/WPS-Zotero) 方能和用户见面，感谢wps官方的倾力支持，感谢所有为此项目努力和使用的人！！
+  感谢github：tankwyn Ooo、l0o0两位作者前期所付出巨大努力，此项目 (https://github.com/tankwyn/WPS-Zotero) 方能和用户见面，感谢wps官方的倾力支持，感谢qq DreamtimeUnderStars 网友提供的文字安装教程，感谢qq akihi. 网友的视频教程，感谢所有为此项目努力和使用的人！！
 
 
 #### 与我联系
