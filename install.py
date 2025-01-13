@@ -49,7 +49,7 @@ if platform.system() == 'Windows':
 PKG_PATH = os.path.dirname(os.path.abspath(__file__))
 with open(PKG_PATH + os.path.sep + 'version.js') as f:
     VERSION = f.readlines()[0].split('=')[-1].strip()[1:-1]
-APPNAME = 'wps-zotero_1.0.0'
+APPNAME = 'wps-zotero_{}'.format(VERSION)
 if platform.system() == 'Darwin':  # macOS
     ADDON_PATH = os.path.expanduser('~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons')
 elif platform.system() == 'Linux':  # Linux
@@ -83,18 +83,15 @@ def uninstall():
     for fp in XML_PATHS.values():
         if not os.path.isfile(fp):
             continue
-    try:
-            # 修改这里，指定encoding='utf-8'
-            with open(fp, 'r', encoding='utf-8') as f:
-                xmlStr = f.read()
-            records = [(m.start(), m.end()) for m in re.finditer(r'[\ \t]*<.*wps-zotero.*/>\s*', xmlStr)]
-            for r in records:
-                print('Removing record from {}'.format(fp))
-                with open(fp, 'w', encoding='utf-8') as f:  # 同样在这里指定encoding='utf-8'
-                    f.write(xmlStr[:r[0]] + xmlStr[r[1]:])
-    except UnicodeDecodeError as e:
-            print(f"Failed to decode file {fp} with utf-8 encoding. Error: {e}")
-            # 如果utf-8解码失败，可以尝试其他编码，例如'latin-1'或直接跳过该文件
+        with open(fp) as f:
+            xmlStr = f.read()
+        records = [(m.start(),m.end()) for m in re.finditer(r'[\ \t]*<.*wps-zotero.*/>\s*', xmlStr)]
+        for r in records:
+            print('Removing record from {}'.format(fp))
+            with open(fp, 'w') as f:
+                f.write(xmlStr[:r[0]] + xmlStr[r[1]:])
+
+
 # Uninstall existing installation
 print('Uninstalling previous installations if there is any ...')
 uninstall()
@@ -124,39 +121,18 @@ shutil.copytree(PKG_PATH, ADDON_PATH + os.path.sep + APPNAME)
 
 # Write records to XML files
 def register(fp, tagname, record):
-    try:
-        # 确保文件存在
-        if not os.path.isfile(fp):
-            print(f"文件 {fp} 不存在.")
-            return
-        
-        # 使用utf-8编码打开文件进行读取
-        with open(fp, 'r', encoding='utf-8') as f:
-            content = f.read()
-        
-        # 查找标签位置
-        pos = [m.end() for m in re.finditer(r'<' + re.escape(tagname) + r'>\s*', content)]
-        if len(pos) == 0:
-            # 如果没有找到标签，则添加一个新的标签
-            content += f'<{tagname}></{tagname}>'
-            pos = [content.index(f'</{tagname}>')]
-        
-        i = pos[0]
-        
-        # 使用utf-8编码打开文件进行写入
-        with open(fp, 'w', encoding='utf-8') as f:
-            f.write(content[:i] + os.linesep + record + content[i:])
-        
-        print(f"成功更新文件 {fp}")
-    
-    except UnicodeDecodeError as e:
-        print(f"无法使用utf-8解码文件 {fp}. 错误: {e}")
-        # 可以选择尝试其他编码或者记录错误后继续
-    except Exception as e:
-        print(f"处理文件 {fp} 时发生错误. 错误: {e}")
+    with open(fp) as f:
+        content = f.read()
+    pos = [m.end() for m in re.finditer(r'<' + tagname + r'>\s*', content)]
+    if len(pos) == 0:
+        content += f'<{tagname}></{tagname}>'
+        pos = [content.index(f'</{tagname}>')]
+    i = pos[0]
+    with open(fp, 'w') as f:
+        f.write(content[:i] + record + os.linesep + content[i:])
 
 
-rec = '<jsplugin url="http://127.0.0.1:3889/" type="wps" enable="enable_dev" install="null" version="1.0.0" name="wps-zotero"/>'
+rec = '<jsplugin url="http://127.0.0.1:3889/" type="wps" enable="enable_dev" install="null" version="{}" name="wps-zotero"/>'.format(VERSION)
 register(XML_PATHS['publish'], 'jsplugins', rec)
 
 
@@ -180,4 +156,4 @@ if os.name == 'nt':
 
 
 print('All done, enjoy!')
-print('(run ./install.py -u to uninstall  or  python3 install.py -u to uninstall)\n卸载请执行 run ./install.py -u to uninstall  或  python3 install.py -u to uninstall')
+print('(run ./install.py -u to uninstall  or  python install.py -u to uninstall)')
