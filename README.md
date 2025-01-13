@@ -6,6 +6,8 @@ zotero-wpsjs文字加载项，一款 学术论文管理 和 wps文字 交互插�
 
 支持平台:Windows & Linux & Mac
 
+由于推送存在bug，Mac端用户请下载右侧发行版"Mac适用"！！
+
 #### 软件架构
 
 wpsjs 加载项和 python
