@@ -46,9 +46,13 @@ if platform.system() == 'Windows':
 
 # File & directory paths
 # 检测操作系统并设置相应的插件路径
-PKG_PATH = os.path.dirname(os.path.abspath(__file__))
-with open(PKG_PATH + os.path.sep + 'version.js') as f:
-    VERSION = f.readlines()[0].split('=')[-1].strip()[1:-1]
+if getattr(sys, 'frozen', False):
+    # 如果是打包后的exe文件
+    PKG_PATH = os.path.dirname(sys.executable)
+else:
+    # 如果是普通Python脚本
+    PKG_PATH = os.path.dirname(os.path.abspath(__file__))
+
 APPNAME = 'wps-zotero_1.0.0'
 if platform.system() == 'Darwin':  # macOS
     ADDON_PATH = os.path.expanduser('~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons')
