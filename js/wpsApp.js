@@ -19,6 +19,14 @@ function detectOS() {
         runServers("runPY",linuxPath,"/runPY.sh",'jsHide')
         return ;
     }  
+  const wpsVersion = compareVersions(wps.Application.Build.split('.').map(Number))
+
+  if(!wpsVersion){
+    alert("您的wps版本低于插件的最低运行要求，请更新wps到最新版本！")
+    return;
+  }
+   
+  
     runServers("runPY","open  "+macPath,"/proxy.app",'jsHide');
     //wps.OAAssist.ShellExecute('open '+macPath+'/proxy.app')
 };
@@ -33,3 +41,13 @@ function checkAndRunZotero() {
         runZotero();
     }
 }
+function compareVersions(version){
+    const nowVersion=version;
+    const tmpVersion=[6,15]
+    if(nowVersion[0]>tmpVersion[0]){
+     return true;
+    }else if(nowVersion[0]===tmpVersion[0]){
+        return nowVersion[1]>=tmpVersion[1]
+    }
+    return false;
+} 

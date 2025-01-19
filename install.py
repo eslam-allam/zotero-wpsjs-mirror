@@ -161,3 +161,28 @@ if os.name == 'nt':
 
 print('All done, enjoy!')
 print('(run ./install.py -u to uninstall  or  python3 install.py -u to uninstall)\n卸载请执行 run ./install.py -u to uninstall  或  python3 install.py -u to uninstall')
+# 在macOS上，安装完成后打开Zotero和WPS
+if platform.system() == 'Darwin':  # macOS
+    try:
+        
+        # 授权proxy
+        app_path = '~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons/wps-zotero_1.0.0/proxy.app'
+
+        # 使用 os.path.expanduser 展开 '~' 到完整路径
+        expanded_app_path = os.path.expanduser(app_path)
+
+        # 使用 subprocess.run 打开应用程序
+        subprocess.run(['open', expanded_app_path])
+
+        # 打开Zotero
+        subprocess.run(['open', '-a', 'Zotero'])
+        
+
+        # 打开WPS
+        subprocess.run(['open', '-a', 'wpsoffice'])
+        
+
+
+        
+    except Exception as e:
+        print(f"无法打开应用程序: {e}")
