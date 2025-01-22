@@ -22,7 +22,7 @@ Mac端 Wps6.15   Zotero 7.x
 Zotero相关使用教程https://zotero-chinese.com/user-guide/
 #### 安装教程
 
-视频教程 【Zotero for mac wps插件安装教程-哔哩哔哩】 https://b23.tv/ux8LVKx
+视频教程 https://b23.tv/KLu5Tcc
 
 Windows平台
 
