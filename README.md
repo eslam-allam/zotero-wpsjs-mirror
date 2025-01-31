@@ -22,7 +22,7 @@ Mac端 Wps6.15   Zotero 7.x
 Zotero相关使用教程https://zotero-chinese.com/user-guide/
 #### 安装教程
 
-视频教程 https://b23.tv/KLu5Tcc
+视频教程 https://b23.tv/tvqvX9g
 
 Windows平台
 
@@ -58,10 +58,11 @@ Linux平台
 
    安装---
    
-   2.打开项目文件夹内的 Mac安装
-
-   如果有提示弹窗，请允许，打开或确认。如图![输入图片说明](9FDE26BA-A697-434B-B25E-12191DB24683.jpeg)然后前往 安全与隐私 里点击 仍要打开 如图![输入图片说明](a9130234-36b0-431f-802d-f47da9e29e21.png)
-
+   由于缺乏证书签名，您需要按下方的步骤操作，视频教程https://b23.tv/tvqvX9g
+   
+   2.打开项目文件夹内的 proxy，弹窗后选择 完成 ，![输入图片说明](5f27a821-2b44-422a-a5da-5b554fa9134c.png)
+   然后打开 系统设置-->隐私与安全性-->点击 安全性 中的 仍要打开![输入图片说明](%E6%88%AA%E5%B1%8F2025-01-31%2021.23.45.png)
+   3.打开项目文件夹内的 Mac安装 ，重复2操作
 #### 致谢 
   由于2024年左右，wps官方进行了加载项的代码审查，导致部分接口下线，同年6月，因zotero qq交流群1029775161的群主bigben446求助，得以认识此项目，经过修修补补，于12月27日完成Mac端的适配工作。
   感谢github：tankwyn Ooo、l0o0两位作者前期所付出巨大努力，此项目 (https://github.com/tankwyn/WPS-Zotero) 方能和用户见面，感谢wps官方的倾力支持，感谢qq DreamtimeUnderStars 网友提供的文字安装教程，感谢qq akihi. 网友的视频教程，感谢所有为此项目努力和使用的人！！
