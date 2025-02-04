@@ -51,3 +51,18 @@ function compareVersions(version){
     }
     return false;
 } 
+
+function handAi(url,taskpaneId){
+  
+    let tsId = window.Application.PluginStorage.getItem(taskpaneId+"")
+    if (!tsId) {
+        let tskpane = window.Application.CreateTaskPane(url+"")
+        let id = tskpane.ID
+        window.Application.PluginStorage.setItem(taskpaneId+"", id)
+        tskpane.Visible = true
+    } else {
+        let tskpane = window.Application.GetTaskPane(tsId)
+        tskpane.Visible = !tskpane.Visible
+    }
+
+}

@@ -10,7 +10,18 @@
                     <button id="btnAddNote" label="Add Note" onAction="OnAction" getImage="GetImage" visible="true" supertip="Insert a new note at the current cursor position" keytip="N"/>
                     <button id="btnUnlink" label="Unlink" onAction="OnAction" getImage="GetImage" visible="true" supertip="Remove all Zotero field codes and unlink from Zotero library" keytip="U"/>
                     <button id="btnExport" label="Export" onAction="OnAction" getImage="GetImage" visible="true" supertip="Export the document to switch to another word processor" keytip="E"/>
-                    <button id="btnAbout" label="About" onAction="OnAction" getImage="GetImage" visible="true" size="large" supertip="About this add-on" keytip="A"/>
+                      
+                 </group>
+                <group id="AiList" label="Ai">
+                
+                <menu id="menu1" label="AiTools"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
+                    <button id="dropitem1" label="DeepSeek" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    <button id="dropitem2" label="ChatGPT" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    <button id="dropitem3" label="智谱清言" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    <button id="dropitem4" label="豆包" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    <button id="dropitem5" label="Kimi" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                </menu>
+                    <button id="btnAbout" label="About" onAction="OnAction" getImage="GetImage" visible="true" size="large" supertip="About this add-on" keytip="A"/>   
                 </group>
             </tab>
         </tabs>
