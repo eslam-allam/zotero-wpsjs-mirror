@@ -99,18 +99,6 @@ function OnAction(control) {
             zc_bind().command('addNote');
             zc_clearRegistry();
             break;
-        case "btnAi":
-            let tsId = window.Application.PluginStorage.getItem("taskpane_id")
-            if (!tsId) {
-                let tskpane = window.Application.CreateTaskPane("https://chat.deepseek.com/")
-                let id = tskpane.ID
-                window.Application.PluginStorage.setItem("taskpane_id", id)
-                tskpane.Visible = true
-            } else {
-                let tskpane = window.Application.GetTaskPane(tsId)
-                tskpane.Visible = !tskpane.Visible
-            }
-            break;
             case "btnAbout":
                 alert(`WPS-Zotero 当前分支版本(${VERSION})由 初心不忘 提供支持\n\n原作：This add-on is licensed under GPL-3.0: <http://www.gnu.org/licenses/>, it comes with no warranty.\n\nAuthor: Tang, Kewei\nhttps://github.com/tankwyn/WPS-Zotero`);
             default:
