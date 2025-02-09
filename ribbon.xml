@@ -8,7 +8,7 @@
                     <button id="btnRefresh" label="Refresh" onAction="OnAction" getImage="GetImage" visible="true" size="large" supertip="Update all citations to reflect changes" keytip="R"/>
                      <separator/>
                     <button id="btnPref" label="Document Preferences" onAction="OnAction" getImage="GetImage" visible="true"   supertip="Change the citation style or locale" keytip="P"/>
-                    <button id="btnAddNote" label="INSERT Note" onAction="OnAction" getImage="GetImage" visible="true"   supertip="Insert a new note at the current cursor position" keytip="N"/>
+                    <button id="btnAddNote" label="Insert Note" onAction="OnAction" getImage="GetImage" visible="true"   supertip="Insert a new note at the current cursor position" keytip="N"/>
                      <separator/>
                     <button id="btnUnlink" label="Unlink Citations" onAction="OnAction" getImage="GetImage" visible="true"   supertip="Remove all Zotero field codes and unlink from Zotero library" keytip="U"/>
                     <button id="btnExport" label="Export" onAction="OnAction" getImage="GetImage" visible="true"  supertip="Export the document to switch to another word processor" keytip="E"/>
