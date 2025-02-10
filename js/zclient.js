@@ -161,13 +161,13 @@ function zc_createClient(documentId, processor) {
         insertField: function(args) {
             const docId = args[0];
             const fieldType = args[1];
-            const noteType = args[2];
+            const noteType = args[2];//noteType=2时，表示插入尾注
             assert(docId === documentId);
             assert(fieldType === 'Http');
-            if (noteType > 1) {
+          /*   if (noteType > 1) {
                 console.warn('Only support in-text and footnote citations, will use footnote instead!');
                 noteType = 1;
-            }
+            } */
             const data = processor.insertField(docId, noteType > 0 ? true : false);
             return respond(data);
         },
