@@ -99,6 +99,17 @@ function OnAction(control) {
             zc_bind().command('addNote');
             zc_clearRegistry();
             break;
+            case "btnDonate":
+                {
+            
+                
+                //8参text 网址，9参bool true启用浏览器打开网址，10参 false缩小show窗口
+                    window.Application.ShowDialog(GetUrlPath() + "/ui/Donate.html", "捐赠", 700 * window.devicePixelRatio, 640 * window.devicePixelRatio, true, true)
+                   
+                   
+                 
+            }
+                break;
             case "btnAbout":
                 alert(`WPS-Zotero 当前分支版本(${VERSION})由 初心不忘 提供支持\n\n原作：This add-on is licensed under GPL-3.0: <http://www.gnu.org/licenses/>, it comes with no warranty.\n\nAuthor: Tang, Kewei\nhttps://github.com/tankwyn/WPS-Zotero`);
             default:
@@ -123,19 +134,23 @@ function GetImage(control) {
             return "images/unlink.svg";
         case "btnExport":
             return "images/export.svg";
-            case "btnAbout":
-                return "images/about.png";
+        case "btnDonate":
+            return "images/Donate.png";
+        case "btnAbout":
+            return "images/about.png";
         case "menu1":
-            return "images/DeepSeek.svg";
+            return "images/DeepSeek.png";
                 case "dropitem1":
-                    return "images/DeepSeek.svg";
+                    return "images/DeepSeek.png";
                 case "dropitem2":
                     return "images/chatgpt.png";
                 case "dropitem3":
                     return "images/zhipu.png";
                 case "dropitem4":
-                    return "images/doubao.png";
+                    return "images/tongyi.svg";
                 case "dropitem5":
+                    return "images/doubao.png";
+                case "dropitem6":
                     return "images/kimi.png";
         default:
             break;
@@ -158,9 +173,12 @@ function dropDownOnAction(selectedId) {
             handAi("https://chatglm.cn/","zhipuqingyan")
             break;
         case "dropitem4":
+            handAi("https://tongyi.aliyun.com/qianwen/","tongyi")
+            break;    
+        case "dropitem5":
             handAi("https://www.doubao.com/chat/","doubao")
             break;
-        case "dropitem5":
+        case "dropitem6":
             handAi("https://kimi.moonshot.cn//","Kimi")
            
        

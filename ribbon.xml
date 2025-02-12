@@ -20,11 +20,14 @@
                 <menu id="menu1" label="AiTools"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
                     <button id="dropitem1" label="DeepSeek" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
                     <button id="dropitem2" label="ChatGPT" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="dropitem3" label="智谱清言" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="dropitem4" label="豆包" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="dropitem5" label="Kimi" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    <button id="dropitem3" label="智谱清言" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />
+                    <button id="dropitem4" label="通义千问" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />      
+                    <button id="dropitem5" label="豆包" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    <button id="dropitem6" label="Kimi" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
                 </menu>
-                    <button id="btnAbout" label="About" onAction="OnAction" getImage="GetImage" visible="true" size="large" supertip="About this add-on" keytip="A"/>   
+                    
+                    <button id="btnDonate" label="Donate" onAction="OnAction" getImage="GetImage" visible="true" size="large" />
+                    <button id="btnAbout" label="About" onAction="OnAction" getImage="GetImage" visible="true" size="large" supertip="About this add-on" keytip="A"/>  
                 </group>
             </tab>
         </tabs>
