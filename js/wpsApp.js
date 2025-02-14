@@ -9,6 +9,7 @@ const macPath=wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_1.0.0`
 function detectOS() {
     var userAgent = navigator.userAgent;
     if (userAgent.indexOf("Windows") !== -1) {
+        window.Application.PluginStorage.setItem("osPlatform","windows")
         runServers("runProxy",winPath,"/proxy.exe",'jsHide');
         if(window.Application.FileSystem.Exists('C:/Program Files/Zotero')){
             runZotero();
@@ -16,6 +17,7 @@ function detectOS() {
        
         return ;
     } else if (userAgent.indexOf("Linux") !== -1) {
+        window.Application.PluginStorage.setItem("osPlatform","linux")
         runServers("runPY",linuxPath,"/runPY.sh",'jsHide')
         return ;
     }  
@@ -25,15 +27,21 @@ function detectOS() {
     alert("您的wps版本低于插件的最低运行要求，请更新wps到最新版本！")
     return;
   }
-   
-  
+  window.Application.PluginStorage.setItem("osPlatform","mac")
+    runZotero()
     runServers("runPY","open  "+macPath,"/proxy.app",'jsHide');
     //wps.OAAssist.ShellExecute('open '+macPath+'/proxy.app')
 };
 //运行zotero
 function runZotero(){
-    runServers("runZotero",'C:/Program Files/Zotero','/zotero.exe','jsMaximizedFocus');
-    window.Application.PluginStorage.setItem("runZotero", true);
+    const osPlatform=window.Application.PluginStorage.getItem("osPlatform")
+    if(osPlatform=="windows"){
+        runServers("runZotero",'C:/Program Files/Zotero','/zotero.exe','jsMaximizedFocus');
+        window.Application.PluginStorage.setItem("runZotero", true);
+    }else if(osPlatform=="mac"){
+        runServers("runZotero",'open /Applications','/Zotero.app','jsMaximizedFocus');
+    }
+   
 }
 //给予zotero焦点
 function checkAndRunZotero() {
@@ -41,6 +49,7 @@ function checkAndRunZotero() {
         runZotero();
     }
 }
+//版本检测
 function compareVersions(version){
     const nowVersion=version;
     const tmpVersion=[6,15]
