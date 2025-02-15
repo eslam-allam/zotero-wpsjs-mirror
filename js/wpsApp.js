@@ -38,8 +38,10 @@ function runZotero(){
     if(osPlatform=="windows"){
         runServers("runZotero",'C:/Program Files/Zotero','/zotero.exe','jsMaximizedFocus');
         window.Application.PluginStorage.setItem("runZotero", true);
+        return;
     }else if(osPlatform=="mac"){
         runServers("runZotero",'open /Applications','/Zotero.app','jsMaximizedFocus');
+        return;
     }
    
 }
