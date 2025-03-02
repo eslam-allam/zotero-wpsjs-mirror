@@ -51,7 +51,7 @@ async function OnAddinLoad(ribbonUI) {
         }
      }
     if(settingsJson.zoteroSwitch){
-        runZotero(osInfo,zoteroPathValue); runZotero(osInfo,zoteroPathValue);
+        runZotero(osInfo,zoteroPathValue);
     }
    
 
