@@ -25,7 +25,7 @@ function onbuttonclick(idStr)
                         window.Application.ActiveDocument.Saved= true
                    
                         window.Application.Quit(-1)
-                        runServers("uninstallZoteroAddin",wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/wps-zotero_1.0.0/winUninstall.exe','jsMaximizedFocus');
+                        runServers("uninstallZoteroAddin",wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/winUninstall.exe','jsMaximizedFocus');
                         alert("卸载成功！")
                         return;
                     }else if(osInfo=="macos"){
