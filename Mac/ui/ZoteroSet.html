@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zotero 设置</title>
+   
+</head>
+
+
+
+<body>
+    <div class="settings-card">
+        <!-- 开关设置项 -->
+        <div class="setting-item">
+            <div class="label-group">
+                <div class="label">Zotero跟随加载项启动</div>
+                <div class="description">开启后自动运行Zotero</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox"id="zoteroSwitch" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- 路径设置项 -->
+        <div class="setting-item">
+            <div class="label-group">
+                <div class="label">Zotero路径</div>
+                <div class="path-group">
+                    <input type="text" 
+                           class="path-input" 
+                           placeholder="请选择Zotero安装路径" 
+                           readonly
+                           id="zoteroPath">
+                    <button class="modify-btn" onclick="setZoteroPath()">修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+ 
+</body>
+<script type="text/javascript"  src="../js/zoteroSet.js"></script>
+<script type="text/javascript"  src="../js/wpsApp.js"></script>
+<script type="text/javascript"  src="../js/util.js"></script>
+
+<script>
+
+
+
+</script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .settings-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        padding: 32px;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .setting-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .setting-item:last-child {
+        border-bottom: none;
+    }
+
+    .label-group {
+        flex: 1; /* 让标签组占据更多空间 */
+        margin-right: 2px; /* 减少与开关之间的间距 */
+    }
+    .label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .description {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    /* 开关样式 */
+ /* 调整开关的外边距 */
+ .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px; /* 开关宽度 */
+        height: 28px; /* 开关高度 */
+      
+    }
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 22px;
+        width: 22px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+    }
+
+    input:checked + .slider {
+        background-color: #4CAF50;
+    }
+
+    input:checked + .slider:before {
+        transform: translateX(20px);
+    }
+
+    /* 路径输入框样式 */
+    .path-group {
+        display: flex;
+        gap: 10px;
+        width: 100%; /* 确保父容器占满可用宽度 */
+    }
+
+    .path-input {
+        flex: 1; /* 让输入框占据剩余空间 */
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #f8f9fa;
+        font-size: 14px;
+        color: #333;
+        min-width: 300px; /* 设置最小宽度，确保输入框足够长 */
+        max-width: 100%; /* 防止输入框超出父容器 */
+    }
+
+    .path-input:focus {
+        outline: none;
+        border-color: #4CAF50;
+        box-shadow: 0 0 0 2px rgba(76,175,80,0.2);
+    }
+
+    .modify-btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .modify-btn:hover {
+        background: #45a049;
+    }
+    .switch {
+            width: 64px; /* 加宽开关容器 */
+        }
+
+        .slider {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 0 8px;
+            color: white;
+        }
+
+        .slider::before {
+            content: "关";
+            position: absolute;
+            right: 6px;
+            transition: all 0.3s;
+        }
+
+        input:checked + .slider::before {
+            content: "开";
+            left: 6px;
+            right: auto;
+        }
+
+        /* 调整滑块位置 */
+        .slider:before {
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(34px);
+            color: #4CAF50;
+        }
+        :root {
+    --switch-on-color: #4CAF50;  /* 开启颜色 */
+    --switch-off-color: #ccc;    /* 关闭颜色 */
+    --switch-text-color: white;  /* 文字颜色 */
+    --switch-knob-size: 22px;    /* 滑块大小 */
+}
+</style>
+</html>

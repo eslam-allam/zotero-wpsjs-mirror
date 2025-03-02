@@ -1,0 +1,7 @@
+{   "zoteroSwitch":true,
+    "zoteroPath": {
+      "windows": "C:/Program Files/Zotero/zotero.exe",
+      "macos": "/Applications/Zotero.app",
+      "linux": "/opt/Zotero/config"
+    }
+  }
