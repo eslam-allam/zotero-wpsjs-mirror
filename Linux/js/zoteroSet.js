@@ -40,7 +40,9 @@ function validateZoteroPath(path, osInfo) {
             expectedSuffix = "zotero.exe"; // Windows 系统下最后一个部分应为 zotero.exe
         } else if (osInfo === "macos") {
             expectedSuffix = "Zotero.app"; // macOS 系统下最后一个部分应为 Zotero.app
-        } else {
+        } else if (osInfo === "linux") {
+            expectedSuffix = "zotero"; // macOS 系统下最后一个部分应为 Zotero.app
+        }else {
             throw new Error("不支持的操作系统：" + osInfo);
         }
 

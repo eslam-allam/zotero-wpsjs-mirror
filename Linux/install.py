@@ -15,25 +15,6 @@ from proxy import stop_proxy
 if platform.system() == 'Linux' and os.environ['USER'] == 'root':
     print("This addon cannot be installed as root!", file=sys.stderr)
     sys.exit(1)
-
-# 在Linux下为当前目录的.sh文件添加执行权限
-if platform.system() == 'Linux':
-    script_dir = PKG_PATH  # 使用已定义的PKG_PATH变量获取脚本目录
-    files_to_chmod = ['runPy.sh', 'runUninstall.sh']
-    
-    for file_name in files_to_chmod:
-        file_path = os.path.join(script_dir, file_name)
-        if os.path.isfile(file_path):
-            try:
-                # 添加执行权限
-                current_mode = os.stat(file_path).st_mode
-                os.chmod(file_path, current_mode | stat.S_IEXEC)
-                print(f"Added execute permission to {file_name}")
-            except Exception as e:
-                print(f"Error setting execute permission for {file_name}: {e}")
-        else:
-            print(f"Warning: {file_name} not found in {script_dir}")
-
 def main():
     # Step 1: 检查并打开 macUninstall.app
     if platform.system() == 'Darwin':  # macOS
@@ -83,6 +64,22 @@ XML_PATHS = {
 }
 PROXY_PATH = ADDON_PATH + os.path.sep + 'proxy.py'
 
+# 在Linux下为当前目录的.sh文件添加执行权限
+if platform.system() == 'Linux':
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    files_to_chmod = ['runPY.sh', 'runUninstall.sh']
+    for file_name in files_to_chmod:
+        file_path = os.path.join(script_dir, file_name)
+        if os.path.isfile(file_path):
+            try:
+                # 添加执行权限
+                current_mode = os.stat(file_path).st_mode
+                os.chmod(file_path, 0o755)
+                print(f"Added execute permission to {file_name}")
+            except Exception as e:
+                print(f"Error setting execute permission for {file_name}: {e}")
+        else:
+            print(f"Warning: {file_name} not found in {script_dir}")
 
 def uninstall():
     print("Trying to quit proxy server if it's currently listening...")
