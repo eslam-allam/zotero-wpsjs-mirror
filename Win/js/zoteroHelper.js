@@ -57,8 +57,8 @@ function checkAndRunZotero() {
         return;
     }
     let settingsJson=getSettingsJson(os);
-    const zoteroSwitchValue=settingsJson.zoteroPath[os];
+    const zoteroPath=settingsJson.zoteroPath[os];
    
-        runZotero(os,zoteroSwitchValue);
+        runZotero(os,zoteroPath);
     
 }
