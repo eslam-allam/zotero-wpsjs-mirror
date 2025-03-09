@@ -152,17 +152,17 @@ function GetImage(control) {
             return "images/zoteroSet.png";
         case "menu1":
             return "images/DeepSeek.png";
-        case "dropitem1":
+        case "deepseekItem":
             return "images/DeepSeek.png";
-        case "dropitem2":
+        case "chatGPTItem":
             return "images/chatgpt.png";
-        case "dropitem3":
+        case "zhipuItem":
             return "images/zhipu.png";
-        case "dropitem4":
+        case "tongyiItem":
             return "images/tongyi.svg";
-        case "dropitem5":
+        case "doubaoItem":
             return "images/doubao.png";
-        case "dropitem6":
+        case "kimiItem":
             return "images/kimi.png";
         case "menu2":
             return "images/Settings.png";
@@ -177,22 +177,22 @@ function GetImage(control) {
 function dropDownOnAction(selectedId) {
     const eleId = selectedId.Id
     switch (eleId) {
-        case "dropitem1":
+        case "deepseekItem":
             handAi("https://chat.deepseek.com/", "DeepSeek")
             break;
-        case "dropitem2":
+        case "chatGPTItem":
             handAi("https://chatgpt.com/", "ChatGPT")
             break;
-        case "dropitem3":
+        case "zhipuItem":
             handAi("https://chatglm.cn/", "zhipuqingyan")
             break;
-        case "dropitem4":
+        case "tongyiItem":
             handAi("https://tongyi.aliyun.com/qianwen/", "tongyi")
             break;
-        case "dropitem5":
+        case "doubaoItem":
             handAi("https://www.doubao.com/chat/", "doubao")
             break;
-        case "dropitem6":
+        case "kimiItem":
             handAi("https://kimi.moonshot.cn//", "Kimi")
 
 
