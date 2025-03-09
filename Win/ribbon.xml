@@ -18,6 +18,8 @@
                 <group id="AiList" >
                   <separator/>
                 <menu id="menu1" label="AiTools"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
+                     <button id="yuanbaoItem" label="腾讯元宝" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    <button id="baiduaiItem" label="百度Ai" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
                     <button id="deepseekItem" label="DeepSeek" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
                     <button id="chatGPTItem" label="ChatGPT" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
                     <button id="zhipuItem" label="智谱清言" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />

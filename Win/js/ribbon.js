@@ -35,25 +35,25 @@ async function OnAddinLoad(ribbonUI) {
 
     }
 
-    
+
 
     //系统检测
-    const osInfo= detectOS();
-    console.log("系统信息："+osInfo)
-    let settingsJson=getSettingsJson(osInfo);
-    const zoteroPathValue=settingsJson.zoteroPath[osInfo];
-    console.log("配置文件"+settingsJson)
+    const osInfo = detectOS();
+    console.log("系统信息：" + osInfo)
+    let settingsJson = getSettingsJson(osInfo);
+    const zoteroPathValue = settingsJson.zoteroPath[osInfo];
+    console.log("配置文件" + settingsJson)
     runProxy(osInfo);
-    if(osInfo=="macos"){
-        const tmp= compareVersions(wps.Application.Build.split('.').map(Number))
-        if(!tmp){
-         alert("你的wps版本无法运行插件，请至 https://www.wps.cn 更新到最新版本！！")
+    if (osInfo == "macos") {
+        const tmp = compareVersions(wps.Application.Build.split('.').map(Number))
+        if (!tmp) {
+            alert("你的wps版本无法运行插件，请至 https://www.wps.cn 更新到最新版本！！")
         }
-     }
-    if(settingsJson.zoteroSwitch){
-        runZotero(osInfo,zoteroPathValue);
     }
-   
+    if (settingsJson.zoteroSwitch) {
+        runZotero(osInfo, zoteroPathValue);
+    }
+
 
     // Exit the proxy server when the application quits.
     wps.ApiEvent.AddApiEventListener("ApplicationQuit", () => {
@@ -152,6 +152,10 @@ function GetImage(control) {
             return "images/zoteroSet.png";
         case "menu1":
             return "images/DeepSeek.png";
+        case "yuanbaoItem":
+            return "images/yuanbao.png";
+        case "baiduaiItem":
+            return "images/baiduai.png";
         case "deepseekItem":
             return "images/DeepSeek.png";
         case "chatGPTItem":
@@ -177,6 +181,12 @@ function GetImage(control) {
 function dropDownOnAction(selectedId) {
     const eleId = selectedId.Id
     switch (eleId) {
+        case "yuanbaoItem":
+            handAi("https://yuanbao.tencent.com/", "yuanbao")
+            break;
+        case "baiduaiItem":
+            handAi("https://chat.baidu.com/", "baiduai")
+            break;
         case "deepseekItem":
             handAi("https://chat.deepseek.com/", "DeepSeek")
             break;
