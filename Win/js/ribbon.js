@@ -150,6 +150,8 @@ function GetImage(control) {
             return "images/about.png";
         case "btnZoteroSet":
             return "images/zoteroSet.png";
+        case "btnRerun":
+            return "images/rerun.png";
         case "menu1":
             return "images/DeepSeek.png";
         case "yuanbaoItem":
@@ -204,7 +206,14 @@ function dropDownOnAction(selectedId) {
             break;
         case "kimiItem":
             handAi("https://kimi.moonshot.cn//", "Kimi")
-
+            break;
+        case "btnRerun":
+            const osInfo = detectOS();
+            let settingsJson = getSettingsJson(osInfo);
+            const zoteroPathValue = settingsJson.zoteroPath[osInfo];
+            runProxy(osInfo);
+            runZotero(osInfo, zoteroPathValue);
+            break;
 
         default:
     }
@@ -219,7 +228,6 @@ function SettingsOnAction(selectedId) {
         case "btnZoteroSet":
             window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 300 * window.devicePixelRatio, false, true)
             break;
-
 
         default:
     }

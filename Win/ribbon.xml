@@ -17,24 +17,24 @@
                   
                 <group id="AiList" >
                   <separator/>
-                <menu id="menu1" label="AiTools"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
-                     <button id="yuanbaoItem" label="腾讯元宝" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="baiduaiItem" label="百度Ai" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="deepseekItem" label="DeepSeek" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="chatGPTItem" label="ChatGPT" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="zhipuItem" label="智谱清言" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />
-                    <button id="tongyiItem" label="通义千问" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />      
-                    <button id="doubaoItem" label="豆包" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                    <button id="kimiItem" label="Kimi" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
-                </menu>
+                    <menu id="menu1" label="AiTools"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
+                        <button id="yuanbaoItem" label="腾讯元宝" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                        <button id="baiduaiItem" label="百度Ai" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                        <button id="deepseekItem" label="DeepSeek" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                        <button id="chatGPTItem" label="ChatGPT" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                        <button id="zhipuItem" label="智谱清言" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />
+                        <button id="tongyiItem" label="通义千问" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />      
+                        <button id="doubaoItem" label="豆包" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                        <button id="kimiItem" label="Kimi" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
+                    </menu>
                     
                     <button id="btnDonate" label="Donate" onAction="OnAction" getImage="GetImage" visible="true" size="large" />
                   
-                     <menu id="menu2" label="Settings"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
-                  
+                    <menu id="menu2" label="Settings"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
                       <button id="btnZoteroSet" label="Zotero-Set" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />   
-                </menu>
-                      <button id="btnAbout" label="About" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />
+                    </menu>
+                    <button id="btnRerun" label="Rerun" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />
+                    <button id="btnAbout" label="About" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />
                 </group>
             </tab>
         </tabs>
