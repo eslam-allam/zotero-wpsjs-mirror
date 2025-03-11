@@ -61,7 +61,6 @@ function getSettingsJson(osInfo) {
         const tmp = window.Application.FileSystem.ReadFile(jsonPath)
         const setValue=JSON.parse(tmp)
         window.Application.FileSystem.WriteFile(tmpJson, tmp);
-        alert("读取配置文件成功！"+setValue.zoteroSwitch)
         return;
     }
     try {
