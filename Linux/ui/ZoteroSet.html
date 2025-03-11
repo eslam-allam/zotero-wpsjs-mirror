@@ -72,9 +72,10 @@ window.onload = async function () {
         //alert("点击了开关")
         const newZoteroSwitchValue = this.checked;
         //alert("开关值为："+newZoteroSwitchValue)
-        //alert("zoteroSwitch的值"+ settingsJson.zoteroSwitch)
+       
         
         settingsJson.zoteroSwitch = newZoteroSwitchValue;
+        //alert("zoteroSwitch的值"+ settingsJson.zoteroSwitch)
         setSettingsJson(settingsJson);
         alert("修改成功！")
       

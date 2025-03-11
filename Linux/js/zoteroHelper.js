@@ -6,20 +6,21 @@
  * @returns 无
  */
 function runProxy(osInfo){
+    const addonPath=getAddonPath(osInfo)
     if (osInfo== "windows") {
         
-        runServers("runZotero", winPath+'/proxy.exe', 'jsMaximizedFocus');
+        runServers("runZotero", addonPath+'/proxy.exe', 'jsMaximizedFocus');
        
         return;
         
     } else if (osInfo== "linux") {
-        runServers("runZotero", linuxPath+'/runPY.sh', 'jsMaximizedFocus');
+        runServers("runZotero", addonPath+'/runPY.sh', 'jsMaximizedFocus');
        
         return;
        
     }  
 
-    runServers("runZotero", 'open '+macPath+'/proxy.app', 'jsMaximizedFocus');
+    runServers("runZotero", 'open '+addonPath+'/proxy.app', 'jsMaximizedFocus');
         return;
 }
 /**

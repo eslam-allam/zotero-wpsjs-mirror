@@ -1,9 +1,4 @@
-const winPath = wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
-
-const linuxPath = wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
-
-const macPath = wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
 function GetUrlPath() {
     let e = document.location.toString()
@@ -26,7 +21,12 @@ function shellExecuteByOAAssist(param) {
  * @returns 返回插件所在路径
  */
 function getAddonPath(osInfo) {
+    const winPath = wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
+
+    const linuxPath = wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
+
+    const macPath = wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
     if (osInfo == "windows") {
 
 
@@ -46,40 +46,40 @@ function getAddonPath(osInfo) {
  */
 function getSettingsJson(osInfo) {
     try {
-   
-   const jsonPath = getAddonPath(osInfo) + '/settings.json'
-    //console.log("json路径“："+jsonPath)
-    if (!window.Application.FileSystem.Exists(jsonPath)) {
-        alert("配置文件不存在！")
-        return null;
-    }
-   
-    const tmpJson=window.Application.Env.GetTempPath()+"/settings.json"
-    //console.log("开始读取配置文件，home路径为"+tmpJson)
-    if(!window.Application.FileSystem.Exists(tmpJson)){
-        
-        const tmp = window.Application.FileSystem.ReadFile(jsonPath)
-        const setValue=JSON.parse(tmp)
-        window.Application.FileSystem.WriteFile(tmpJson, tmp);
-        return;
-    }
-    try {
-        const res=window.Application.FileSystem.ReadFile(tmpJson)
-        const jsonObject = JSON.parse(res)
-     
-        return jsonObject;
- 
-    } catch (error) {
-        console.error("解析json出错，请检查json数据格！", error);
-        return null; 
-    }
-  
- 
+        const localString = window.localStorage.getItem("appConfig")
+        if (localString) {
 
-} catch (error) {
-    console.error("读取配置文件失败！", error);
-    return null; // 返回 null 表示发生错误
-}
+            return JSON.parse(localString)
+        }
+        const jsonPath = getAddonPath(osInfo) + '/settings.json'
+        //console.log("json路径“："+jsonPath)
+        if (!window.Application.FileSystem.Exists(jsonPath)) {
+            alert("配置文件不存在！")
+            return null;
+        }
+
+        //const tmpJson=window.Application.Env.GetTempPath()+"/settings.json"
+        //console.log("开始读取配置文件，home路径为"+tmpJson)
+
+
+
+        try {
+            const res = window.Application.FileSystem.ReadFile(tmpJson)
+            const jsonObject = JSON.parse(res)
+
+            return jsonObject;
+
+        } catch (error) {
+            console.error("解析json出错，请检查json数据格！", error);
+            return null;
+        }
+
+
+
+    } catch (error) {
+        console.error("读取配置文件失败！", error);
+        return null; // 返回 null 表示发生错误
+    }
 }
 /**
  * 
@@ -88,14 +88,17 @@ function getSettingsJson(osInfo) {
  */
 function setSettingsJson(updatedJsonString) {
     try {
-        
-        const jsonString =  JSON.stringify(updatedJsonString);
-     //alert("更新数据为"+jsonString)
+        const jsonString = JSON.stringify(updatedJsonString);
+        window.localStorage.setItem("appConfig", jsonString)
+
+        //alert("更新数据为"+jsonString)
         // 写入文件
-          const tmpJson=window.Application.Env.GetTempPath()+"/settings.json"
-        console.log("json路径："+tmpJson)
-         window.Application.FileSystem.WriteFile(tmpJson, jsonString);
-       
+        const osInfo = detectOS();
+        const addonPath = getAddonPath(osInfo)
+        const tmpJson = addonPath + "/settings.json"
+        console.log("json路径：" + tmpJson)
+        window.Application.FileSystem.WriteFile(tmpJson, jsonString);
+
     } catch (error) {
         console.error("写入配置文件错误！", error);
     }
