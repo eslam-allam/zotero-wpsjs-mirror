@@ -64,7 +64,7 @@ function getSettingsJson(osInfo) {
 
 
         try {
-            const res = window.Application.FileSystem.ReadFile(tmpJson)
+            const res = window.Application.FileSystem.ReadFile(jsonPath)
             const jsonObject = JSON.parse(res)
 
             return jsonObject;

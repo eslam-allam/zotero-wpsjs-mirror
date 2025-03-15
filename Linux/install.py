@@ -6,8 +6,7 @@ import shutil
 import sys
 import re
 import stat
-import subprocess
-import shutil
+import subprocess 
 from proxy import stop_proxy
 
 
@@ -15,31 +14,35 @@ from proxy import stop_proxy
 if platform.system() == 'Linux' and os.environ['USER'] == 'root':
     print("This addon cannot be installed as root!", file=sys.stderr)
     sys.exit(1)
-def main():
-    # Step 1: 检查并打开 macUninstall.app
-    if platform.system() == 'Darwin':  # macOS
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        mac_uninstall_app_path = os.path.join(script_dir, 'macUninstall.app')
 
-        if os.path.isdir(mac_uninstall_app_path):  # 确保路径是一个目录
-            print(f"Found {mac_uninstall_app_path}. Granting execute permission...")
 
-            # 获取当前权限并添加执行权限
-            try:
-                current_mode = os.stat(mac_uninstall_app_path).st_mode
-                os.chmod(mac_uninstall_app_path, current_mode | stat.S_IEXEC)
-                print(f"Execute permission granted to {mac_uninstall_app_path}.")
-            except Exception as e:
-                print(f"Failed to grant execute permission: {e}")
+# Check whether Python 3 is in PATH
+def checkpy():
+    def runcmd(cmd):
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+        code = p.wait()
+        res = [line.decode() for line in p.stdout.readlines()]
+        return code, res
 
-            # 打开 macUninstall.app
-            print(f"Opening {mac_uninstall_app_path}...")
-            try:
-                subprocess.run(['open', mac_uninstall_app_path], check=True)
-            except subprocess.CalledProcessError as e:
-                print(f"Failed to open {mac_uninstall_app_path}: {e}")
-        else:
-            print("macUninstall.app not found in the script directory.")
+    if platform.system() == 'Windows':
+        cmd = 'where python'
+    else:
+        cmd = 'which python'
+    _, pyexes = runcmd(cmd)
+    ver = None
+    if len(pyexes) > 0:
+        _, res = runcmd('{} --version'.format(pyexes[0].strip()))
+        if len(res) > 0 and res[0].startswith('Python 3'):
+            ver = res[0]
+    if ver is None:
+        print('Please add Python 3 to the PATH environment variable!')
+    else:
+        print('Python in PATH:', ver)
+    return ver
+        
+if platform.system() == 'Windows':
+    checkpy()
+
 
 # File & directory paths
 # 检测操作系统并设置相应的插件路径
@@ -64,7 +67,6 @@ XML_PATHS = {
 }
 PROXY_PATH = ADDON_PATH + os.path.sep + 'proxy.py'
 
-# 在Linux下为当前目录的.sh文件添加执行权限
 if platform.system() == 'Linux':
     script_dir = os.path.dirname(os.path.abspath(__file__))
     files_to_chmod = ['runPY.sh', 'runUninstall.sh']
@@ -108,43 +110,7 @@ def uninstall():
             with open(fp, 'w') as f:
                 f.write(xmlStr[:r[0]] + xmlStr[r[1]:])
 
-# Copy uninstall files to ADDON_PATH
-def copy_uninstall_files():
-    uninstall_files = {
-        'Windows': 'winUninstall.exe',
-        'Darwin': 'macUninstall.app',  # macOS 卸载文件
-        'Linux': 'runUninstall.sh'
-    }
-    system = platform.system()
-    uninstall_file = uninstall_files.get(system)
 
-    if not uninstall_file:
-        print(f'No uninstall file defined for {system}')
-        return
-
-    source_path = os.path.join(PKG_PATH, uninstall_file)
-    target_path = os.path.join(ADDON_PATH, uninstall_file)
-
-    if not os.path.exists(source_path):
-        print(f'Uninstall file {source_path} does not exist.')
-        return
-
-    print(f'Copying {uninstall_file} to {target_path}')
-
-    try:
-        if system == 'Darwin':  # macOS 处理逻辑
-            # 如果目标路径已存在，则删除它
-            if os.path.exists(target_path):
-                shutil.rmtree(target_path)  # 删除已有目录以避免冲突
-            
-            # 使用 copytree 复制整个目录
-            shutil.copytree(source_path, target_path)
-        else:  # 其他系统（如 Windows 和 Linux）
-            shutil.copy(source_path, target_path)
-
-        print(f'Successfully copied {uninstall_file} to {target_path}')
-    except Exception as e:
-        print(f'Failed to copy uninstall files: {e}')
 # Uninstall existing installation
 print('Uninstalling previous installations if there is any ...')
 uninstall()
@@ -166,8 +132,7 @@ if not os.path.exists(XML_PATHS['publish']):
 </jsplugins>
 ''')
 
-# Copy uninstall files
-copy_uninstall_files()
+
 
 # Copy to jsaddons
 shutil.copytree(PKG_PATH, ADDON_PATH + os.path.sep + APPNAME)
@@ -214,22 +179,7 @@ print('(run ./install.py -u to uninstall  or  python3 install.py -u to uninstall
 # 在macOS上，安装完成后打开Zotero和WPS
 if platform.system() == 'Darwin':  # macOS
     try:
-        # 获取脚本所在的目录
-        script_dir = os.path.dirname(os.path.abspath(__file__))
         
-        # 构造 macUninstall 文件的路径
-        mac_uninstall_path = os.path.join(script_dir, 'macUninstall')
-        
-        # 检查文件是否存在
-        if os.path.isfile(mac_uninstall_path):
-            print(f"Granting execute permission to {mac_uninstall_path}...")
-            
-            # 赋予文件执行权限
-            os.chmod(mac_uninstall_path, os.stat(mac_uninstall_path).st_mode | stat.S_IEXEC)
-            
-            print(f"{mac_uninstall_path} is now executable.")
-        else:
-            print("macUninstall file not found in the script directory.")
         # 授权proxy
         app_path = '~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons/wps-zotero_1.0.0/proxy.app'
 
@@ -246,34 +196,8 @@ if platform.system() == 'Darwin':  # macOS
         # 打开WPS
         subprocess.run(['open', '-a', 'wpsoffice'])
         
-# 尝试打开隐私与安全性设置（兼容不同 macOS 版本）
-        print("Opening Privacy & Security settings...")
-        try:
-            # 方法 1：适用于 macOS Ventura 及更新版本
-            subprocess.run([
-                'open', 'x-apple.systempreferences:com.apple.preference.security?Privacy'
-            ])
-        except Exception as e:
-            print(f"Method 1 failed: {e}")
-            try:
-                # 方法 2：适用于 macOS Monterey 及更早版本
-                subprocess.run([
-                    'open', '-b', 'com.apple.systempreferences', '--args', 'Privacy'
-                ])
-            except Exception as e:
-                print(f"Method 2 failed: {e}")
 
-        # 等待系统设置窗口加载
-        import time
-        time.sleep(2)  # 等待 2 秒以确保窗口完全加载
 
-        # 使用 AppleScript 设置焦点（可选）
-        applescript = '''
-        tell application "System Events"
-            set frontmost of process "System Settings" to true
-        end tell
-        '''
-        subprocess.run(['osascript', '-e', applescript])
         
     except Exception as e:
         print(f"无法打开应用程序: {e}")
