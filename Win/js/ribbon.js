@@ -21,6 +21,11 @@ function zc_alert(msg) {
  * Callback for plugin loading.
 **/
 async function OnAddinLoad(ribbonUI) {
+    const osInfo = detectOS();
+    const tutorial=getAddonPath(osInfo)
+    let settingsJson = getSettingsJson(osInfo);
+    const zoteroPathValue = settingsJson.zoteroPath[osInfo];
+    
     if (typeof (wps.Enum) !== "object") {
         wps.Enum = WPS_Enum;
         zc_alert('You are using an old version of WPS, this plugin might not work properly!');
@@ -28,22 +33,21 @@ async function OnAddinLoad(ribbonUI) {
     if (typeof (wps.ribbonUI) !== "object") {
         wps.ribbonUI = ribbonUI;
     }
-
+   
+   
     if (window.Application.JSIDE == null) {
 
-        alert("Zotero加载项需要您授权\n请依次打开菜单栏的  工具--->宏安全性--->可靠发行商--->勾选 '信任对于wpsjs项目的访问',重启wps即可!")
-
+        const setMacroSecurity=window.Application.confirm("Zotero加载项需要您授权,是否打开授权教程？")
+        if (!setMacroSecurity) {
+            return; // 用户取消时直接退出
+        }
+        window.Application.Documents.Open(tutorial+'/Zotero授权教程.docx')
     }
 
-
+    runProxy(osInfo);
 
     //系统检测
-    const osInfo = detectOS();
-    console.log("系统信息：" + osInfo)
-    let settingsJson = getSettingsJson(osInfo);
-    const zoteroPathValue = settingsJson.zoteroPath[osInfo];
-    console.log("配置文件" + settingsJson)
-    runProxy(osInfo);
+  
     if (osInfo == "macos") {
         const tmp = compareVersions(wps.Application.Build.split('.').map(Number))
         if (!tmp) {
