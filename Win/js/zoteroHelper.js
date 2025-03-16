@@ -37,7 +37,7 @@ function runZotero(osInfo,zoteroPath) {
    //console.log("zoteroPath.osInfo的值"+settingsJson.zoteroPath[osInfo])
    // 检查路径是否为空
    if (!zoteroPathValue || zoteroPathValue.trim() === "") {
-    alert("zotero不可以为空！")
+    alert("启动zotero失败，zotero路径不可以为空！")
     return;
     }   
     if (osInfo == "macos") {
