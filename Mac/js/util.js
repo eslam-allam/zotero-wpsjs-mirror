@@ -1,9 +1,4 @@
-const winPath = wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
-
-const linuxPath = wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
-
-const macPath = wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
 function GetUrlPath() {
     let e = document.location.toString()
@@ -26,7 +21,12 @@ function shellExecuteByOAAssist(param) {
  * @returns 返回插件所在路径
  */
 function getAddonPath(osInfo) {
+    const winPath = wps.Env.GetAppDataPath() + `/kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
 
+
+    const linuxPath = wps.Env.GetHomePath() + `/.local/share/Kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
+
+    const macPath = wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/wps-zotero_1.0.0`;
     if (osInfo == "windows") {
 
 
