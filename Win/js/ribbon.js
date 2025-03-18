@@ -37,7 +37,7 @@ async function OnAddinLoad(ribbonUI) {
    
     if (window.Application.JSIDE == null) {
 
-        const setMacroSecurity=window.Application.confirm("Zotero加载项需要您授权,是否打开授权教程？")
+        const setMacroSecurity=window.Application.confirm("Zotero加载项需要您授权,是否打开授权教程？","ok")
         if (!setMacroSecurity) {
             return; // 用户取消时直接退出
         }
