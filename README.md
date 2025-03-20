@@ -2,7 +2,7 @@
 
 ## 1.介绍
 
-Zotero-WPSJS文字加载项，一款**学术论文管理** 和**WPS文字**交互插件。
+Zotero-WPSJS文字加载项，一款**学术论文管理软件Zotero** 和**WPS文字**交互插件。
 
 支持平台:Windows & Linux & Mac
 

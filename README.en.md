@@ -1,10 +1,10 @@
-# WPSJS-Zotero
+# Zotero-WPSJS
 
 #### Description
-zotero-wpsjs加载项
+A plugin for integrating Zotero, an academic paper management software, with WPS Office Writer.
 
 #### Software Architecture
-Software architecture description
+Supporting platforms: Windows, Linux, and Mac.
 
 #### Installation
 
