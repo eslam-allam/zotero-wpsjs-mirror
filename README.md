@@ -36,6 +36,12 @@ Zotero相关使用教程https://zotero-chinese.com/user-guide/
 
    3.右键win项目文件夹内的 win安装.exe，以管理员运行
 
+   卸载---
+
+   方法1.关闭wps后，执行Win项目内 winUninstall.exe
+
+   方法2.点击插件 About ---> 卸载插件
+
 ### 3.2 Linux平台
 
 WPS相关设置: 工具--->宏安全性--->可靠发行商--->勾选 '信任对于wpsjs项目的访问'
@@ -44,7 +50,11 @@ WPS相关设置: 工具--->宏安全性--->可靠发行商--->勾选 '信任对�
 ```bash
 python install.py
 ```
+卸载---
 
+方法1.关闭wps后，执行Linux项目内 uninstall.py
+
+方法2.点击插件 About ---> 卸载插件
 
 ### 3.3 Mac平台
 
@@ -57,6 +67,12 @@ WPS相关设置: 工具--->宏安全性--->可靠发行商--->勾选 '信任对�
 打开mac项目文件夹内的 Mac安装 点击 打开。
 然后前往 系统设置-->隐私与安全性-->点击 安全性 中的 mac安装 仍要打开。
 部分mac系统需要运行一次proxy.app，操作过程如上。
+
+卸载---
+
+方法1.关闭wps后，执行Mac项目内 macUninstall.app 
+
+方法2.点击插件 About ---> 卸载插件
 
 ## 🙏 致谢
 
