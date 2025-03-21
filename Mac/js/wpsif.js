@@ -1104,6 +1104,10 @@ var zc_wps = {
 
     activate: function(docId) {
         zc_getDocumentById(docId).Activate();
+        const appPath = Application.Path;
+        const appIndex = appPath.indexOf(".app") + ".app".length;//包含.app
+        const appPathValue = appPath.substring(0, appIndex);
+        runServers('openWPS', 'open -a ' + appPathValue, 'jsMaximizedFocus')
     },
 
     getDocData: function(docId) {

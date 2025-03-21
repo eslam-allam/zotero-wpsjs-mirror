@@ -59,7 +59,6 @@ function getSettingsJson(osInfo) {
     if(!window.Application.FileSystem.Exists(tmpJson)){
         
         const tmp = window.Application.FileSystem.ReadFile(jsonPath)
-        const setValue=JSON.parse(tmp)
         window.Application.FileSystem.WriteFile(tmpJson, tmp);
         return;
     }
