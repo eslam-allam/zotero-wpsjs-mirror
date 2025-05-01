@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zotero 设置</title>
-   
+
 </head>
 
 
 
 <body>
+    <div class="header-bar">
+        <button class="reset-btn" onclick="resetToDefault()">恢复默认设置</button>
+    </div>
     <div class="settings-card">
         <!-- 开关设置项 -->
         <div class="setting-item">
@@ -18,7 +22,7 @@
                 <div class="description">开启后自动运行Zotero</div>
             </div>
             <label class="switch">
-                <input type="checkbox"id="zoteroSwitch" checked>
+                <input type="checkbox" id="zoteroSwitch" checked>
                 <span class="slider"></span>
             </label>
         </div>
@@ -28,61 +32,108 @@
             <div class="label-group">
                 <div class="label">Zotero路径</div>
                 <div class="path-group">
-                    <input type="text" 
-                           class="path-input" 
-                           placeholder="请选择Zotero安装路径" 
-                           readonly
-                           id="zoteroPath">
+                    <input type="text" class="path-input" placeholder="请选择Zotero安装路径" readonly id="zoteroPath">
                     <button class="modify-btn" onclick="setZoteroPath()">修改</button>
                 </div>
             </div>
         </div>
+
+        <div class="setting-item">
+            <div class="label-group">
+                <div class="label">引注预览</div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="citation-preview" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
     </div>
- 
- 
+
+
 </body>
-<script type="text/javascript"  src="../js/zoteroSet.js"></script>
-<script type="text/javascript"  src="../js/wpsApp.js"></script>
-<script type="text/javascript"  src="../js/util.js"></script>
+<script type="text/javascript" src="../js/zoteroSet.js"></script>
+<script type="text/javascript" src="../js/wpsApp.js"></script>
+<script type="text/javascript" src="../js/util.js"></script>
 
 <script>
 
-window.onload = async function () {
-    const osInfo = detectOS();
-    let settingsJson = getSettingsJson(osInfo);
+    window.onload = async function () {
+        const osInfo = detectOS();
+        let settingsJson = getSettingsJson(osInfo);
 
-   
-    //console.log("zotero设置页读取，配置缓存为" + window.localStorage.getItem("addonConfig"))
-    // 设置开关状态
-    const switchInput = document.getElementById('zoteroSwitch');
-    if (!switchInput) {
+
+        //console.log("zotero设置页读取，配置缓存为" + window.localStorage.getItem("addonConfig"))
+        // 设置开关状态
+        const switchInput = document.getElementById('zoteroSwitch');
+        if (!switchInput) {
             throw new Error('页面元素未正确加载');
         }
-    const zoteroSwitchValue = settingsJson.zoteroSwitch;
-    console.log("zoteroSwitchValue的值为：" + zoteroSwitchValue)
-    switchInput.checked = zoteroSwitchValue;
+        const zoteroSwitchValue = settingsJson.zoteroSwitch;
+        console.log("zoteroSwitchValue的值为：" + zoteroSwitchValue)
+        switchInput.checked = zoteroSwitchValue;
+
+        const switchcitation = document.getElementById('citation-preview');
+        if (!switchcitation) {
+            throw new Error('页面元素未正确加载');
+        }
+        const switchcitationValue = settingsJson.citationPreview;
+        console.log("zoteroSwitchValue的值为：" + switchcitationValue)
+        switchcitation.checked = switchcitationValue;
+
+        // 设置路径输入框值
+        let pathInput = document.getElementById('zoteroPath');
+        pathInput.value = settingsJson.zoteroPath[osInfo]
+
+        // 开关状态改变事件
+        switchInput.addEventListener('click', async function () {
+            //alert("点击了开关")
+            const newZoteroSwitchValue = this.checked;
+            //alert("开关值为："+newZoteroSwitchValue)
+            //alert("zoteroSwitch的值"+ settingsJson.zoteroSwitch)
+
+            settingsJson.zoteroSwitch = newZoteroSwitchValue;
+            setSettingsJson(settingsJson);
+            alert("修改成功！")
+
+        });
+        switchcitation.addEventListener('click', async function () {
+            //alert("点击了开关")
+            const newSwitchcitation = this.checked;
+            //alert("开关值为："+newZoteroSwitchValue)
+            //alert("zoteroSwitch的值"+ settingsJson.zoteroSwitch)
+
+            settingsJson.citationPreview = newSwitchcitation;
+            setSettingsJson(settingsJson);
+            alert("修改成功！")
+
+        });
+    }
 
 
-    // 设置路径输入框值
-    let pathInput = document.getElementById('zoteroPath');
-    pathInput.value = settingsJson.zoteroPath[osInfo]
-
-    // 开关状态改变事件
-    switchInput.addEventListener('click', async function () {
-        //alert("点击了开关")
-        const newZoteroSwitchValue = this.checked;
-        //alert("开关值为："+newZoteroSwitchValue)
-        //alert("zoteroSwitch的值"+ settingsJson.zoteroSwitch)
-        
-        settingsJson.zoteroSwitch = newZoteroSwitchValue;
-        setSettingsJson(settingsJson);
-        alert("修改成功！")
-      
-    });
+    async function resetToDefault() {
+    if (!confirm("确定要恢复所有默认设置吗？")) return;
+    
+    const osInfo = detectOS();
+    const defaultSettings = {
+        zoteroSwitch: false,
+        citationPreview: true,
+        zoteroPath: {
+            "windows": "C:/Program Files/Zotero/zotero.exe",
+            "macos": "",
+            "linux": ""
+        }
+    };
+    
+    // 更新并保存设置
+    setSettingsJson(defaultSettings);
+    
+    // 更新界面元素
+    document.getElementById('zoteroSwitch').checked = defaultSettings.zoteroSwitch;
+    document.getElementById('citation-preview').checked = defaultSettings.citationPreview;
+    document.getElementById('zoteroPath').value = defaultSettings.zoteroPath[osInfo];
+    
+    alert("已成功恢复默认设置！");
 }
-
-
-
 </script>
 <style>
     * {
@@ -101,10 +152,31 @@ window.onload = async function () {
         padding: 20px;
     }
 
+    .header-bar {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .reset-btn {
+        background: #ff5722;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .reset-btn:hover {
+        background: #f4511e;
+    }
+
     .settings-card {
         background: white;
         border-radius: 12px;
-        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         padding: 32px;
         width: 100%;
         max-width: 500px;
@@ -123,9 +195,12 @@ window.onload = async function () {
     }
 
     .label-group {
-        flex: 1; /* 让标签组占据更多空间 */
-        margin-right: 2px; /* 减少与开关之间的间距 */
+        flex: 1;
+        /* 让标签组占据更多空间 */
+        margin-right: 2px;
+        /* 减少与开关之间的间距 */
     }
+
     .label {
         font-weight: 600;
         color: #333;
@@ -138,14 +213,17 @@ window.onload = async function () {
     }
 
     /* 开关样式 */
- /* 调整开关的外边距 */
- .switch {
+    /* 调整开关的外边距 */
+    .switch {
         position: relative;
         display: inline-block;
-        width: 48px; /* 开关宽度 */
-        height: 28px; /* 开关高度 */
-      
+        width: 48px;
+        /* 开关宽度 */
+        height: 28px;
+        /* 开关高度 */
+
     }
+
     .switch input {
         opacity: 0;
         width: 0;
@@ -176,11 +254,11 @@ window.onload = async function () {
         border-radius: 50%;
     }
 
-    input:checked + .slider {
+    input:checked+.slider {
         background-color: #4CAF50;
     }
 
-    input:checked + .slider:before {
+    input:checked+.slider:before {
         transform: translateX(20px);
     }
 
@@ -188,25 +266,29 @@ window.onload = async function () {
     .path-group {
         display: flex;
         gap: 10px;
-        width: 100%; /* 确保父容器占满可用宽度 */
+        width: 100%;
+        /* 确保父容器占满可用宽度 */
     }
 
     .path-input {
-        flex: 1; /* 让输入框占据剩余空间 */
+        flex: 1;
+        /* 让输入框占据剩余空间 */
         padding: 8px 12px;
         border: 1px solid #ddd;
         border-radius: 6px;
         background: #f8f9fa;
         font-size: 14px;
         color: #333;
-        min-width: 300px; /* 设置最小宽度，确保输入框足够长 */
-        max-width: 100%; /* 防止输入框超出父容器 */
+        min-width: 300px;
+        /* 设置最小宽度，确保输入框足够长 */
+        max-width: 100%;
+        /* 防止输入框超出父容器 */
     }
 
     .path-input:focus {
         outline: none;
         border-color: #4CAF50;
-        box-shadow: 0 0 0 2px rgba(76,175,80,0.2);
+        box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
     }
 
     .modify-btn {
@@ -222,57 +304,65 @@ window.onload = async function () {
     .modify-btn:hover {
         background: #45a049;
     }
+
     .switch {
-            width: 64px; /* 加宽开关容器 */
-        }
+        width: 64px;
+        /* 加宽开关容器 */
+    }
 
-        .slider {
-            display: flex;
-            align-items: center;
-            font-size: 12px;
-            font-weight: 500;
-            padding: 0 8px;
-            color: white;
-        }
+    .slider {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 0 8px;
+        color: white;
+    }
 
-        .slider::before {
-            content: "关";
-            position: absolute;
-            right: 6px;
-            transition: all 0.3s;
-        }
+    .slider::before {
+        content: "关";
+        position: absolute;
+        right: 6px;
+        transition: all 0.3s;
+    }
 
-        input:checked + .slider::before {
-            content: "开";
-            left: 6px;
-            right: auto;
-        }
+    input:checked+.slider::before {
+        content: "开";
+        left: 6px;
+        right: auto;
+    }
 
-        /* 调整滑块位置 */
-        .slider:before {
-            height: 22px;
-            width: 22px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
+    /* 调整滑块位置 */
+    .slider:before {
+        height: 22px;
+        width: 22px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .3s;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
-        input:checked + .slider:before {
-            transform: translateX(34px);
-            color: #4CAF50;
-        }
-        :root {
-    --switch-on-color: #4CAF50;  /* 开启颜色 */
-    --switch-off-color: #ccc;    /* 关闭颜色 */
-    --switch-text-color: white;  /* 文字颜色 */
-    --switch-knob-size: 22px;    /* 滑块大小 */
-}
+    input:checked+.slider:before {
+        transform: translateX(34px);
+        color: #4CAF50;
+    }
+
+    :root {
+        --switch-on-color: #4CAF50;
+        /* 开启颜色 */
+        --switch-off-color: #ccc;
+        /* 关闭颜色 */
+        --switch-text-color: white;
+        /* 文字颜色 */
+        --switch-knob-size: 22px;
+        /* 滑块大小 */
+    }
 </style>
+
 </html>

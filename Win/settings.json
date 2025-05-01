@@ -3,5 +3,6 @@
       "windows": "C:/Program Files/Zotero/zotero.exe",
       "macos": "",
       "linux": ""
-    }
+    },
+    "citationPreview":false
   }

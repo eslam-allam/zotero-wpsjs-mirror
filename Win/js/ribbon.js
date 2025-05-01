@@ -57,7 +57,37 @@ async function OnAddinLoad(ribbonUI) {
     if (settingsJson.zoteroSwitch) {
         runZotero(osInfo, zoteroPathValue);
     }
+    if(settingsJson.citationPreview){
+        wps.ApiEvent.AddApiEventListener("WindowSelectionChange", () => {
+            if(window.Application.Selection.Fields.Count == 0) { 
+                let cpId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID+"");
+                if(cpId){
+                    const res=Number(cpId)
+                    window.Application.ActiveDocument.Fields.Item(res).Result.HighlightColorIndex = 0;
+                }
+               return
+            }
+          
+            if(window.Application.Selection.Fields.Count >= 1) { 
+              
+                let myRange =window.Application.Selection.Fields.Item(1).Code.Text
+                const hasCitation =  myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
+                if(hasCitation){
+                    citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview")
+                    console.log("域代码为"+myRange)
+                    return
+                }
+               
+              
+            }
+          
+    
+    
+        });
+    
+       
 
+    }
 
     // Exit the proxy server when the application quits.
     wps.ApiEvent.AddApiEventListener("ApplicationQuit", () => {
@@ -67,7 +97,7 @@ async function OnAddinLoad(ribbonUI) {
 
     });
 
-
+   
     return true;
 }
 
@@ -230,7 +260,7 @@ function SettingsOnAction(selectedId) {
             window.Application.ShowDialog(GetUrlPath() + "/ui/About.html", "关于", 600 * window.devicePixelRatio, 480 * window.devicePixelRatio, false, true)
             break;
         case "btnZoteroSet":
-            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 300 * window.devicePixelRatio, false, true)
+            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, true)
             break;
 
         default:
