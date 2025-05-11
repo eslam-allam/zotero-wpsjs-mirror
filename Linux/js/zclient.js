@@ -62,6 +62,7 @@ function zc_createClient(documentId, processor) {
                 // Keep responding until the transaction is fullfilled
                 while (req && req.status < 300) {
                     req = autoRespond(req);
+                    //console.log(req)
                 }
             }
             else {
@@ -161,7 +162,7 @@ function zc_createClient(documentId, processor) {
         insertField: function(args) {
             const docId = args[0];
             const fieldType = args[1];
-            const noteType = args[2];//noteType=2时，表示插入尾注
+            const noteType = args[2];
             assert(docId === documentId);
             assert(fieldType === 'Http');
           /*   if (noteType > 1) {
@@ -256,7 +257,7 @@ function zc_createClient(documentId, processor) {
         setText: function(args) {
             const docId = args[0];
             const fieldId = args[1];
-            const text = args[2];
+            const text = decodeMixedUnicodeSetText(args[2]);
             const isRich = args[3];
             processor.setFieldText(docId, fieldId, text, isRich);
             return respond(null);
@@ -273,7 +274,8 @@ function zc_createClient(documentId, processor) {
             const docId = args[0];
             assert(docId === documentId);
             const fieldId = args[1];
-            const code = args[2];
+            const code = decodeMixedUnicodeSetCode(args[2]);
+            //console.log(args[2])
             processor.setFieldCode(documentId, fieldId, code);
             return respond(null);
         },
