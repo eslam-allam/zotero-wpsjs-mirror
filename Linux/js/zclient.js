@@ -257,7 +257,7 @@ function zc_createClient(documentId, processor) {
         setText: function(args) {
             const docId = args[0];
             const fieldId = args[1];
-            const text = decodeMixedUnicodeSetText(args[2]);
+            const text = decodeMixedUnicodeSetText(args[2]);//字符转义
             const isRich = args[3];
             processor.setFieldText(docId, fieldId, text, isRich);
             return respond(null);

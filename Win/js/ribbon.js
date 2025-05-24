@@ -22,10 +22,10 @@ function zc_alert(msg) {
 **/
 async function OnAddinLoad(ribbonUI) {
     const osInfo = detectOS();
-    const tutorial=getAddonPath(osInfo)
+    const tutorial = getAddonPath(osInfo)
     let settingsJson = getSettingsJson(osInfo);
     const zoteroPathValue = settingsJson.zoteroPath[osInfo];
-    
+
     if (typeof (wps.Enum) !== "object") {
         wps.Enum = WPS_Enum;
         zc_alert('You are using an old version of WPS, this plugin might not work properly!');
@@ -33,21 +33,21 @@ async function OnAddinLoad(ribbonUI) {
     if (typeof (wps.ribbonUI) !== "object") {
         wps.ribbonUI = ribbonUI;
     }
-   
-   
+
+
     if (window.Application.JSIDE == null) {
 
-        const setMacroSecurity=window.Application.confirm("Zotero加载项需要您授权,是否打开授权教程？","ok")
+        const setMacroSecurity = window.Application.confirm("Zotero加载项需要您授权,是否打开授权教程？", "ok")
         if (!setMacroSecurity) {
             return; // 用户取消时直接退出
         }
-        window.Application.Documents.Open(tutorial+'/Zotero授权教程.docx')
+        window.Application.Documents.Open(tutorial + '/Zotero授权教程.docx')
     }
 
     runProxy(osInfo);
 
     //系统检测
-  
+
     if (osInfo == "macos") {
         const tmp = compareVersions(wps.Application.Build.split('.').map(Number))
         if (!tmp) {
@@ -57,35 +57,43 @@ async function OnAddinLoad(ribbonUI) {
     if (settingsJson.zoteroSwitch) {
         runZotero(osInfo, zoteroPathValue);
     }
-    if(settingsJson.citationPreview){
+    if (settingsJson.citationPreview) {
         wps.ApiEvent.AddApiEventListener("WindowSelectionChange", () => {
-            if(window.Application.Selection.Fields.Count == 0) { 
-                let cpId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID+"");
-                if(cpId){
-                    const res=Number(cpId)
+            let unlinking = window.Application.PluginStorage.getItem("unlink")
+            let footnotes = window.Application.PluginStorage.getItem("footnotes")
+            if (unlinking || footnotes) {
+                return
+            }
+            if (window.Application.Selection.Fields.Count == 0  && window.Application.ActiveDocument.Footnotes.Count==0) {
+                let cpId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID + "");
+                if (cpId) {
+                    const res = Number(cpId)
                     window.Application.ActiveDocument.Fields.Item(res).Result.HighlightColorIndex = 0;
                 }
-               return
+                return
             }
-          
-            if(window.Application.Selection.Fields.Count >= 1) { 
-              
-                let myRange =window.Application.Selection.Fields.Item(1).Code.Text
-                const hasCitation =  myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
-                if(hasCitation){
-                    citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview")
-                    console.log("域代码为"+myRange)
-                    return
+
+            if (window.Application.Selection.Fields.Count >= 1) {
+
+                const tl = window.Application.ActiveDocument.ActiveWindow.GetPoint(window.Application.Selection.Range)
+
+                let myRange = window.Application.Selection.Fields.Item(1).Code.Text
+                const hasCitation = myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
+                if (hasCitation) {
+                    if (!settingsJson.mouseFollow) {
+                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview")
+                        console.log("域代码为" + myRange)
+                        return
+                    }
+                    window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "ai", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 5) * window.devicePixelRatio)
+
                 }
-               
-              
+
             }
-          
-    
-    
+
         });
-    
-       
+
+
 
     }
 
@@ -97,7 +105,7 @@ async function OnAddinLoad(ribbonUI) {
 
     });
 
-   
+
     return true;
 }
 
@@ -260,7 +268,7 @@ function SettingsOnAction(selectedId) {
             window.Application.ShowDialog(GetUrlPath() + "/ui/About.html", "关于", 600 * window.devicePixelRatio, 480 * window.devicePixelRatio, false, true)
             break;
         case "btnZoteroSet":
-            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, true)
+            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, false, true)
             break;
 
         default:

@@ -104,7 +104,9 @@ function setSettingsJson(updatedJsonString) {
     }
 
 
-}function decodeMixedUnicodeSetText(str) {
+}
+
+function decodeMixedUnicodeSetText(str) {
 
     return str
        

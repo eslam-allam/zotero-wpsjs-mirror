@@ -53,37 +53,46 @@ async function OnAddinLoad(ribbonUI) {
     if (settingsJson.zoteroSwitch) {
         runZotero(osInfo, zoteroPathValue);
     }
-    if(settingsJson.citationPreview){
+  if (settingsJson.citationPreview) {
         wps.ApiEvent.AddApiEventListener("WindowSelectionChange", () => {
-            if(window.Application.Selection.Fields.Count == 0) { 
-                let cpId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID+"");
-                if(cpId){
-                    const res=Number(cpId)
+            let unlinking = window.Application.PluginStorage.getItem("unlink")
+            let footnotes = window.Application.PluginStorage.getItem("footnotes")
+            if (unlinking || footnotes) {
+                return
+            }
+            if (window.Application.Selection.Fields.Count == 0  && window.Application.ActiveDocument.Footnotes.Count==0) {
+                let cpId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID + "");
+                if (cpId) {
+                    const res = Number(cpId)
                     window.Application.ActiveDocument.Fields.Item(res).Result.HighlightColorIndex = 0;
                 }
-               return
+                return
             }
-          
-            if(window.Application.Selection.Fields.Count >= 1) { 
-              
-                let myRange =window.Application.Selection.Fields.Item(1).Code.Text
-                const hasCitation =  myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
-                if(hasCitation){
-                    citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview")
-                    console.log("域代码为"+myRange)
-                    return
+
+            if (window.Application.Selection.Fields.Count >= 1) {
+
+                const tl = window.Application.ActiveDocument.ActiveWindow.GetPoint(window.Application.Selection.Range)
+
+                let myRange = window.Application.Selection.Fields.Item(1).Code.Text
+                const hasCitation = myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
+                if (hasCitation) {
+                    if (!settingsJson.mouseFollow) {
+                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview")
+                        console.log("域代码为" + myRange)
+                        return
+                    }
+                    window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "ai", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 5) * window.devicePixelRatio)
+
                 }
-               
-              
+
             }
-          
-    
-    
+
         });
-    
-       
+
+
 
     }
+
 
     // Exit the proxy server when the application quits.
     wps.ApiEvent.AddApiEventListener("ApplicationQuit", () => {
