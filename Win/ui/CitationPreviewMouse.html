@@ -14,7 +14,7 @@
 
         body {
             background-color: #f5f5f5;
-     
+
             font-family: 'Helvetica Neue', Arial, sans-serif;
             color: #333;
             padding-top: 10px;
@@ -74,7 +74,7 @@
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
         }
 
-       
+
 
         .card-section {
 
@@ -188,13 +188,11 @@
                 max-height: 50vh;
             }
         }
-
-
     </style>
 </head>
 
 <body>
-   
+
     <div class="card-container" id="cardContainer"></div>
 
     <script>
@@ -244,13 +242,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            
-             document.documentElement.addEventListener('mouseleave', function(e) {
-    // 可选：添加延迟避免误触
-   
-      window.close();
 
-  });
+            document.documentElement.addEventListener('mouseleave', function (e) {
+                window.Application.PluginStorage.getItem("topTo")
+
+                window.close();
+
+            });
             new CardGenerator('cardContainer', cardsData);
 
 
@@ -267,14 +265,15 @@
 
                     // 根据点击区域执行不同操作
                     if (sectionType === 'top') {
+                        window.Application.PluginStorage.setItem("topTo", "true")
                         window.Application.ActiveDocument.Fields.Item(selectionField.Index).Select()
                     } else {
-                        
+
                         let flag = 0;
                         //1.获取Find对象 
                         let find = window.Application.Selection.Find;
                         //2.设置要搜索的文本和其他搜索选项
-                        find.Text = selectedData.positioning+``
+                        find.Text = selectedData.positioning + ``
                         find.Forward = true //文档中向前搜索
                         find.Wrap = 1 // wdFindContinue 1
                         find.MatchCase = false //区分大小写
@@ -285,12 +284,12 @@
 
                         while (find.Execute()) {
                             //console.log(window.Application.Selection.Fields.Item(1).Result.Text) 
-                            let cpfId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID+"");
-                           
-                           if(!cpfId){
-                               const cpId= window.Application.Selection.Fields.Item(1).Index
-                               window.Application.PluginStorage.setItem(window.Application.ActiveDocument.DocID+"",cpId+"")
-                           }
+                            let cpfId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID + "");
+
+                            if (!cpfId) {
+                                const cpId = window.Application.Selection.Fields.Item(1).Index
+                                window.Application.PluginStorage.setItem(window.Application.ActiveDocument.DocID + "", cpId + "")
+                            }
 
                             window.Application.Selection.Fields.Item(1).Result.HighlightColorIndex = 0;
                             flag = 1;
@@ -343,7 +342,7 @@
                     const authorCount = originalAuthors.length;
                     const isChinese = ['zh', 'zho', 'chi'].includes((itemData.language || '').toLowerCase());
 
-                  
+
                     const processAuthor = a => {
                         if (typeof a === 'string') return a.trim();
                         return [

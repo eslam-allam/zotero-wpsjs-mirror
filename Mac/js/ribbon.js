@@ -57,14 +57,14 @@ async function OnAddinLoad(ribbonUI) {
     if (settingsJson.zoteroSwitch) {
         runZotero(osInfo, zoteroPathValue);
     }
-  if (settingsJson.citationPreview) {
+    if (settingsJson.citationPreview) {
         wps.ApiEvent.AddApiEventListener("WindowSelectionChange", () => {
             let unlinking = window.Application.PluginStorage.getItem("unlink")
             let footnotes = window.Application.PluginStorage.getItem("footnotes")
             if (unlinking || footnotes) {
                 return
             }
-            if (window.Application.Selection.Fields.Count == 0  && window.Application.ActiveDocument.Footnotes.Count==0) {
+            if (window.Application.Selection.Fields.Count == 0 && window.Application.ActiveDocument.Footnotes.Count == 0) {
                 let cpId = window.Application.PluginStorage.getItem(window.Application.ActiveDocument.DocID + "");
                 if (cpId) {
                     const res = Number(cpId)
@@ -85,7 +85,11 @@ async function OnAddinLoad(ribbonUI) {
                         console.log("域代码为" + myRange)
                         return
                     }
-                    window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "ai", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 5) * window.devicePixelRatio)
+                    const topFlag = window.Application.PluginStorage.getItem("topTo")
+                    if(topFlag){
+                        return
+                    }
+                    window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "引注预览", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 30) * window.devicePixelRatio)
 
                 }
 
@@ -259,7 +263,7 @@ function SettingsOnAction(selectedId) {
             window.Application.ShowDialog(GetUrlPath() + "/ui/About.html", "关于", 600 * window.devicePixelRatio, 480 * window.devicePixelRatio, false, true)
             break;
         case "btnZoteroSet":
-            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 300 * window.devicePixelRatio, false, true)
+            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, false, true)
             break;
 
 
