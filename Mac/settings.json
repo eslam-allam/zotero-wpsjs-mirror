@@ -4,5 +4,6 @@
       "macos": "",
       "linux": ""
     },
-    "citationPreview":false
+    "citationPreview":false,
+    "mouseFollow":false
   }
