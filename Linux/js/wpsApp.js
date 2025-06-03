@@ -61,11 +61,11 @@ function handAi(url, taskpaneId) {
     }
 
 }
-function citationPreviewUi(url, taskpaneId) {
+function citationPreviewUi(url, taskpaneId,title) {
 
     let tsId = window.Application.PluginStorage.getItem(taskpaneId + "")
     if (!tsId) {
-        let tskpane = window.Application.CreateTaskPane(url + "")
+        let tskpane = window.Application.CreateTaskPane(url + "",title)
         let id = tskpane.ID
          tskpane.MinWidth=450 * window.devicePixelRatio
         window.Application.PluginStorage.setItem(taskpaneId + "", id)
