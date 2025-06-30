@@ -2,25 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSBackgroundOnly</key>
-	<true/>
-	<key>CFBundleDisplayName</key>
-	<string>proxy</string>
-	<key>CFBundleExecutable</key>
-	<string>proxy</string>
-	<key>CFBundleIconFile</key>
-	<string>icon-windowed.icns</string>
-	<key>CFBundleIdentifier</key>
-	<string>proxy</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>proxy</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>0.0.0</string>
-	<key>NSHighResolutionCapable</key>
-	<true/>
+    <key>CFBundleExecutable</key>
+    <string>zotero-proxy</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.example.ZoteroProxy</string>
+    <key>CFBundleName</key>
+    <string>ZoteroProxy</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
 </dict>
 </plist>
