@@ -11,7 +11,7 @@
                     <button id="btnAddNote" label="Insert Note" onAction="OnAction" getImage="GetImage" visible="true"   supertip="Insert a new note at the current cursor position" keytip="N"/>
                      <separator/>
                     <button id="btnUnlink" label="Unlink Citations" onAction="OnAction" getImage="GetImage" visible="true"   supertip="Remove all Zotero field codes and unlink from Zotero library" keytip="U"/>
-                    <button id="btnExport" label="Export" onAction="OnAction" getImage="GetImage" visible="true"  supertip="Export the document to switch to another word processor" keytip="E"/>
+                   <button id="btnCitationHyperlinks" label="CitationHyperlinks" onAction="OnAction" getImage="GetImage" visible="true"  supertip="CitationHyperlinks" keytip="E"/>
                     
                  </group>
                   

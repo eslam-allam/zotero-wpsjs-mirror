@@ -75,4 +75,5 @@ function citationPreviewUi(url, taskpaneId,title) {
         let tskpane = window.Application.GetTaskPane(tsId)
         tskpane.Visible = true
         tskpane.Navigate(url+"")
+      
 }

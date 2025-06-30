@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>引注预览</title>
     <style>
-        * {
+         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -17,8 +17,50 @@
             padding: 2rem;
             font-family: 'Helvetica Neue', Arial, sans-serif;
             color: #333;
-            padding-top: 60px;
+            padding-top: 15px; 
+        }
 
+    
+        .fixed-delete-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+       
+        }
+
+      
+        .delete-btn {
+            padding: 8px 18px;
+            background-color: #ff4d4f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            font-weight: 500;
+        }
+
+        .delete-btn:hover {
+            background-color: #ff7875;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
+        }
+
+        .delete-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 删除图标样式 */
+        .delete-icon {
+            width: 18px;
+            height: 18px;
         }
 
         .fixed-header {
@@ -29,20 +71,19 @@
             background: #f5f5f5;
             z-index: 1000;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-
             max-width: 1000px;
             margin: 0 auto;
+            padding-top: 15px;
+            padding-bottom: 10px;
         }
 
         .header-title {
             font-size: 22px;
-            /* 缩小标题字号 */
             line-height: 1.2;
-            /* 紧凑行高 */
             color: #333;
             margin-bottom: 6px;
-            /* 减少标题下边距 */
             text-align: center;
+            padding-top: 10px;
         }
 
 
@@ -53,7 +94,6 @@
             max-width: 1200px;
             margin: 0 auto;
             padding-top: 20px;
-            /* 增加顶部间距 */
         }
 
         .card {
@@ -66,7 +106,6 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-
         }
 
         .card:hover {
@@ -85,11 +124,9 @@
         }
 
         .card-section {
-
             position: relative;
             padding: 0.5rem;
             transition: background-color 0.2s ease;
-
         }
 
         .card-section:hover {
@@ -98,11 +135,8 @@
 
         .top-section {
             flex: 0 0 auto;
-            /* 确保不会因为其他元素的变化而改变大小 */
             height: 40px;
-            /* 根据需要调整具体的像素值 */
             cursor: pointer;
-
         }
 
         .bottom-section {
@@ -114,11 +148,9 @@
             display: flex;
             align-items: center;
             min-width: 0;
-
         }
 
         .card-id {
-
             font-weight: 700;
             color: #6366f1;
             margin-right: 1rem;
@@ -130,16 +162,10 @@
             color: #1f2937;
             font-weight: 600;
             white-space: nowrap;
-            /* 禁止换行 */
             overflow: hidden;
-            /* 隐藏溢出内容 */
             text-overflow: ellipsis;
-            /* 显示省略号 */
             flex: 1;
-            /* 新增：在flex容器中自动扩展 */
             min-width: 0;
-            /* 新增：允许文本收缩 */
-
         }
 
         .card-content {
@@ -153,7 +179,6 @@
             min-height: 4.8em;
             max-height: 7.2em;
             position: relative;
-
         }
 
         @supports not (-webkit-line-clamp: 3) {
@@ -197,17 +222,58 @@
             }
         }
 
+        .deletion-notice {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #52c41a;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 3000;
+            animation: fadeOut 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; }
+        }
 
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
-               
+                padding-top: 15px;
             }
 
+            .fixed-delete-container {
+                top: 1px;
+                right: 15px;
+            }
+            
+            .delete-btn {
+                padding: 6px 15px;
+                font-size: 14px;
+            }
+            
+            .delete-icon {
+                width: 16px;
+                height: 16px;
+            }
+            
             .fixed-header {
-                
+                padding-top: 5px;
             }
-
+            
+            .header-title {
+                font-size: 20px;
+                padding-top: 15px;
+            }
+            
             .card-container {
                 grid-template-columns: 1fr;
             }
@@ -217,6 +283,15 @@
 
 <body>
    
+            <div class="fixed-delete-container">
+        <button id="deleteButton" class="delete-btn">
+            <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+            </svg>
+            删除引注
+        </button>
+    </div>
+    
     <div class="card-container" id="cardContainer"></div>
 
     <script>
@@ -268,7 +343,24 @@
         document.addEventListener('DOMContentLoaded', () => {
             new CardGenerator('cardContainer', cardsData);
 
-
+   // 添加删除按钮功能
+            document.getElementById('deleteButton').addEventListener('click', function() {
+                
+                if (confirm('确定要删除所有引注吗？此操作不可恢复。',"wps")) {
+                  
+                    document.getElementById('cardContainer').innerHTML = 
+                        '<div class="no-results" style="text-align: center; padding: 30px; font-size: 18px; color: #ff4d4f;">所有引注已删除</div>';
+                    
+                 window.Application.ActiveDocument.Fields.Item(selectionField.Index).Delete()
+                    
+                    
+                  
+                    this.innerHTML = '✓ 已删除';
+                    this.style.backgroundColor = '#52c41a';
+                    
+                   
+                }
+            });
             document.querySelectorAll('.card-section').forEach(section => {
                 section.addEventListener('click', function (e) {
                     e.stopPropagation();
@@ -334,13 +426,7 @@
             });
 
 
-            document.querySelectorAll('.card').forEach(card => {
-                card.addEventListener('click', function (e) {
-                    if (e.target === this) {
-
-                    }
-                });
-            });
+       
         });
 
         function processCitationData(data) {

@@ -74,15 +74,15 @@ async function OnAddinLoad(ribbonUI) {
             }
 
             if (window.Application.Selection.Fields.Count >= 1) {
-
+ 
                 const tl = window.Application.ActiveDocument.ActiveWindow.GetPoint(window.Application.Selection.Range)
 
                 let myRange = window.Application.Selection.Fields.Item(1).Code.Text
                 const hasCitation = myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
                 if (hasCitation) {
                     if (!settingsJson.mouseFollow) {
-                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview")
-                        console.log("域代码为" + myRange)
+                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview","引注预览")
+                       
                         return
                     }
                     const topFlag = window.Application.PluginStorage.getItem("topTo")
@@ -90,7 +90,7 @@ async function OnAddinLoad(ribbonUI) {
                         return
                     }
                     window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "引注预览", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 5) * window.devicePixelRatio)
-
+ 
                 }
 
             }
@@ -146,11 +146,9 @@ function OnAction(control) {
             zc_bind().command('setDocPrefs');
             zc_clearRegistry();
             break;
-        case "btnExport":
+      case "btnCitationHyperlinks":
             //checkAndRunZotero()//给予zotero焦点
-            if (confirm('Convert this document to a format for other word processors to import from? You may want to make a backup first.')) {
-                zc_bind().export();
-            }
+          bindCitationsToBookmarks()
             break;
         case "btnUnlink":
             //checkAndRunZotero()//给予zotero焦点
@@ -188,8 +186,8 @@ function GetImage(control) {
             return "images/addNote.png";
         case "btnUnlink":
             return "images/unlink.svg";
-        case "btnExport":
-            return "images/export.svg";
+        case "btnCitationHyperlinks":
+            return "images/Hyperlinks.png";
         case "btnDonate":
             return "images/Donate.png";
         case "btnAbout":
