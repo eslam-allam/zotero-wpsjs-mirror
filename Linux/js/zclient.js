@@ -11,8 +11,8 @@
 **/
 function zc_createClient(documentId, processor) {
     // The proxy server listens on 21931 and forwards requests to 23119
-    const commandUrl = 'http://127.0.0.1:21931/connector/document/execCommand';
-    const respondUrl = 'http://127.0.0.1:21931/connector/document/respond';
+    const commandUrl = 'http://127.0.0.1:23119/connector/document/execCommand';
+    const respondUrl = 'http://127.0.0.1:23119/connector/document/respond';
 
     function requestStatusHint(status) {
         if (status >= 300) {
