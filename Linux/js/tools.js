@@ -30,22 +30,33 @@ function makeId(length) {
  * Make a decent post request using XMLHttpRequest.
 **/
 function postRequestXHR(url, payload) {
-    console.debug('>>>>> request:', url, payload);
-    const req = new XMLHttpRequest();
-    req.open('POST', url, false);
-    req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-    req.send(JSON.stringify(payload));
-    let json = undefined;
-    try {
-        json = JSON.parse(req.responseText);
-    }
-    catch (error) {
-        // Swallow any errors
-    }
-    const ret = { status: req.status, payload: json };
-    console.debug('<<<<< response: ', ret);
-    return ret;
-}
+    const ref=JSON.stringify(payload)
+    console.log("ref为"+ref)
+    console.log("payload为"+payload)
+       var result = `function pos(){  const req = new XMLHttpRequest();
+   
+       req.open('POST', "${url}", false);
+       req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+   
+       req.send(JSON.stringify(${ref}));
+       let json = undefined;
+       try {
+           json = JSON.parse(req.responseText);
+       }
+       catch (error) {
+           // Swallow any errors
+       }
+       const ret = { status: req.status, payload: json };
+   
+       return JSON.stringify(ret);}`
+       window.Application.JSIDE.SelectedJSComponent.CodeModule.InsertLines(1,result) 
+      const ret= window.Application.Run("pos")
+       window.Application.JSIDE.SelectedJSComponent.CodeModule.DeleteLines(0, 19)
+       window.Application.ActiveDocument.Saved= true
+      
+       return JSON.parse(ret)
+   }
+
 
 function postRequestXHRAsync(url, payload, callback) {
     console.debug('>>>>> request:', url, payload);

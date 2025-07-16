@@ -21,6 +21,7 @@ function zc_alert(msg) {
  * Callback for plugin loading.
 **/
 async function OnAddinLoad(ribbonUI) {
+    window.Application.ScreenUpdating = true;
     const osInfo = detectOS();
     const tutorial = getAddonPath(osInfo)
     let settingsJson = getSettingsJson(osInfo);
@@ -44,7 +45,7 @@ async function OnAddinLoad(ribbonUI) {
         window.Application.Documents.Open(tutorial + '/Zotero授权教程.docx')
     }
 
-    runProxy(osInfo);
+
 
     //系统检测
 

@@ -33,7 +33,7 @@
                     <menu id="menu2" label="Settings"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
                       <button id="btnZoteroSet" label="Zotero-Set" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />   
                     </menu>
-                    <button id="btnRerun" label="Rerun" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />
+                
                     <button id="btnAbout" label="About" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />
                 </group>
             </tab>
