@@ -1,14 +1,14 @@
 // Element types
 const domElmType = {
-    ELEMENT_NODE:	1,
-    ATTRIBUTE_NODE:	2,
-    TEXT_NODE:	3,
-    CDATA_SECTION_NODE:	4,
-    PROCESSING_INSTRUCTION_NODE:	7,
-    COMMENT_NODE:	8,
-    DOCUMENT_NODE:	9,
-    DOCUMENT_TYPE_NODE:	10,
-    DOCUMENT_FRAGMENT_NODE:	11,
+    ELEMENT_NODE: 1,
+    ATTRIBUTE_NODE: 2,
+    TEXT_NODE: 3,
+    CDATA_SECTION_NODE: 4,
+    PROCESSING_INSTRUCTION_NODE: 7,
+    COMMENT_NODE: 8,
+    DOCUMENT_NODE: 9,
+    DOCUMENT_TYPE_NODE: 10,
+    DOCUMENT_FRAGMENT_NODE: 11,
 };
 
 /**
@@ -20,8 +20,8 @@ function makeId(length) {
     const charactersLength = characters.length;
     let counter = 0;
     while (counter < length) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-      counter += 1;
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        counter += 1;
     }
     return result;
 }
@@ -30,10 +30,9 @@ function makeId(length) {
  * Make a decent post request using XMLHttpRequest.
 **/
 function postRequestXHR(url, payload) {
-    const ref=JSON.stringify(payload)
-    console.log("ref为"+ref)
-    console.log("payload为"+payload)
-       var result = `function pos(){  const req = new XMLHttpRequest();
+    const ref = JSON.stringify(payload)
+
+    var result = `function pos(){  const req = new XMLHttpRequest();
    
        req.open('POST', "${url}", false);
        req.setRequestHeader('Content-type', 'application/json; charset=utf-8');
@@ -49,13 +48,13 @@ function postRequestXHR(url, payload) {
        const ret = { status: req.status, payload: json };
    
        return JSON.stringify(ret);}`
-       window.Application.JSIDE.SelectedJSComponent.CodeModule.InsertLines(1,result) 
-      const ret= window.Application.Run("pos")
-       window.Application.JSIDE.SelectedJSComponent.CodeModule.DeleteLines(0, 19)
-       window.Application.ActiveDocument.Saved= true
-      
-       return JSON.parse(ret)
-   }
+    window.Application.JSIDE.SelectedJSComponent.CodeModule.InsertLines(1, result)
+    const ret = window.Application.Run("pos")
+    window.Application.JSIDE.SelectedJSComponent.CodeModule.DeleteLines(0, 19)
+    window.Application.ActiveDocument.Saved = true
+
+    return JSON.parse(ret)
+}
 
 function postRequestXHRAsync(url, payload, callback) {
     console.debug('>>>>> request:', url, payload);
@@ -164,7 +163,7 @@ function parseColor(colorStr, reverse) {
         if (reverse) {
             tmp.reverse();
         }
-        color = parseInt(tmp[2])*256*256 + parseInt(tmp[1])*256 + parseInt(tmp[0]);
+        color = parseInt(tmp[2]) * 256 * 256 + parseInt(tmp[1]) * 256 + parseInt(tmp[0]);
     }
     return color;
 }
@@ -186,9 +185,9 @@ function matchColor(targetColor, colors) {
         const _r = parseInt('0x' + _cStr.substr(0, 2));
         const _g = parseInt('0x' + _cStr.substr(2, 2));
         const _b = parseInt('0x' + _cStr.substr(4, 2));
-        return (r - _r)**2 + (g - _g)**2 + (b - _b)**2;
+        return (r - _r) ** 2 + (g - _g) ** 2 + (b - _b) ** 2;
     }
-    let d1 = 3 * 1000**2;
+    let d1 = 3 * 1000 ** 2;
     let res = null;
     for (let c of colors) {
         let d = diff(c);
