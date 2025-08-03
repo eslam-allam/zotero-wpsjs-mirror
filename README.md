@@ -24,7 +24,7 @@ Zotero-jsa加载项，一款**学术论文管理软件Zotero** 和**WPS文字**�
 
 #### 开发，调试，封装，部署等教程
 
-视频教程
+安装教程[B站](https://www.bilibili.com/video/BV1PdhVz3Ebr)
 
 
 
