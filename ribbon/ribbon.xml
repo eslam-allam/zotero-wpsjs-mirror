@@ -1,0 +1,20 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="rxIRibbonUI_onLoad">
+  <ribbon>
+    <tabs>
+      <tab id="ZoteroTab" label="Zotero-jsa"  keytip="C">
+        <group id="ZoteroGroup"  label="Zotero">
+          <button id="InsertZoteroCitationButton" label="Add/Edit Citation" size="large" image="addEditZoteroCitation0" onAction="ZoteroRibbon" supertip="Insert a new citation, or edit the citation at the current cursor position" keytip="C"/>
+          <button id="InsertZoteroBibliographyButton" label="Add/Edit Bibliography" size="large" image="addEditZoteroBibliography" onAction="ZoteroRibbon" supertip="Insert a new bibliography, or edit the existing bibliography, at the current cursor position" keytip="B"/>
+	    <separator id="ZoteroSeparator1"/>
+	      <button id="RefreshZotero" label="Refresh" image="refresh" size="large" onAction="ZoteroRibbon" supertip="Update all citations to reflect changes" keytip="R"/>
+	    <separator id="ZoteroSeparator2"/>
+          <button id="ZoteroSetDocPrefs" label="Document Preferences" image="setZoteroDocPrefs-small" onAction="ZoteroRibbon" supertip="Change the citation style or locale" keytip="P"/>
+          <button id="ZoteroRemoveCodes" label="Unlink Citations" image="unlink" onAction="ZoteroRibbon" supertip="Remove all Zotero field codes and unlink from Zotero library" keytip="U"/>
+           <separator id="ZoteroSeparator3"/>
+          <button id="InsertZoteroNoteButton" label="Insert Note" size="large" image="addZoteroNote" onAction="ZoteroRibbon" supertip="Insert a new note at the current cursor position" keytip="N"/>
+          <button id="AboutButton" label="About" onAction="ZoteroRibbon" image="About"  size="large" />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

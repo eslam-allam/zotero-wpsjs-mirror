@@ -1,1 +1,0 @@
-const VERSION = '0.1.0_JSA'
