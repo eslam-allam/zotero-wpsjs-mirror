@@ -10,5 +10,5 @@ function runServers(FunctionName,osPath,windowStyle){
     window.Application.JSIDE.SelectedJSComponent.CodeModule.InsertLines(1,result) 
     window.Application.Run(''+FunctionName)
     window.Application.JSIDE.SelectedJSComponent.CodeModule.DeleteLines(0, 1)
-    window.Application.ActiveDocument.Saved= true
+ 
 }
