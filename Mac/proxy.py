@@ -1,227 +1,106 @@
-#!/usr/bin/env python3
-
-import socket
-import select
-import time
-import sys
+from flask import Flask, request, Response
+import requests
+import threading
 import logging
+import time
 import os
-import atexit
-import traceback
-import errno
 
+app = Flask(__name__)
+shutdown_flag = False
+shutdown_lock = threading.Lock()
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)  # 禁用Flask默认请求日志
 
-ZOTERO_PORT = 23119
-PROXY_PORT = 21931
-BUFSIZE = 4096
-DELAY = 0.0001
-PREFLIGHT_HEADERS = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS,PUT,PATCH,DELETE',
-    'Access-Control-Allow-Headers': '*',
-    'Access-Control-Allow-Credentials': 'true',
-}
+TARGET_URL = "http://127.0.0.1:23119"  # Zotero API地址
+PROXY_PORT = 21932
+SHUTDOWN_ENDPOINT = "/stopproxy"
 
+def proxy_request():
+    # 构建目标URL
+    target = f"{TARGET_URL}{request.path}"
+    if request.query_string:
+        target += f"?{request.query_string.decode()}"
 
-def parse_head(hd_raw):
-    head = hd_raw.decode('utf8').split("\r\n")
-    request = head[0]
-    headers = {t[0]: t[1] for t in map(lambda x: x.split(': ') + [''], head[1:])}
-    return request, headers
+    # 转发请求头 (排除不安全的头)
+    headers = {
+        k: v for k, v in request.headers
+        if k.lower() not in ['host', 'content-length', 'content-encoding']
+    }
 
-
-def recv_all(sock):
-    data = b''
-    closed = False
-
-    # Read in Http head
-    while True:
-        part = sock.recv(BUFSIZE)
-        if not part:
-            closed = True
-            break
-        data += part
-        if b'\r\n\r\n' in data:
-            break
-
-    if not data:
-        return data
-
-    hd_raw = data.partition(b'\r\n\r\n')[0]
-    req, headers = parse_head(hd_raw)
-
-    # Read full body
-    if 'Content-Length' in headers:
-        length = len(hd_raw) + 4 + int(headers['Content-Length'])
-        while len(data) < length:
-            data += sock.recv(BUFSIZE)
-    elif not closed:
-        if req.startswith('TRACE'):
-            # TRACE method must not include a body
-            pass
-        elif data.startswith(b'OPTIONS') and 'Origin' in headers and 'Access-Control-Request-Method' in headers:
-            # Preflight requests don't have a body
-            pass
-        else:
-            # Continue to read till the connection is closed
-            while True:
-                part = sock.recv(BUFSIZE)
-                if not part:
-                    closed = True
-                    break
-                data += part
-
-    return data
-
-
-def stop_proxy():
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # 发送请求到目标服务器
     try:
-        s.connect(('127.0.0.1', PROXY_PORT))
-        s.send(b'POST /stopproxy HTTP/1.1\r\n\r\n')
-    except:
-        # Swallow all exceptions
-        pass
-    finally:
-        s.close()
+        resp = requests.request(
+            method=request.method,
+            url=target,
+            headers=headers,
+            data=request.get_data(),
+            cookies=request.cookies,
+            stream=True,
+            allow_redirects=False
+        )
+    except requests.exceptions.RequestException as e:
+        app.logger.error(f"代理请求失败: {str(e)}")
+        return Response("目标服务器错误", status=502)
 
+    # 构建代理响应
+    response = Response(resp.iter_content(chunk_size=8192), status=resp.status_code)
 
-class ProxyServer:
-    input_list = []
-    channels = {}
-    clients = []
+    # 添加跨域头
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
 
-    def __init__(self, host, port):
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # NOTE: Setting this on Windows will cause multiple instances listening on the same port.
-        if os.name == 'posix':
-            self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
-        self.server.bind((host, port))
-        self.server.listen()
-        self.running = False
+    # 复制原始响应头
+    for key, value in resp.headers.items():
+        if key.lower() not in ['content-encoding', 'transfer-encoding', 'content-length']:
+            response.headers[key] = value
 
-    def run(self):
-        self.input_list.append(self.server)
-        self.running = True
-        while self.running:
-            time.sleep(DELAY)
-            rlist, _, _ = select.select(self.input_list, [], [])
-            for s in rlist:
-                if s == self.server:
-                    self.on_accept()
-                    break
+    return response
 
-                data = recv_all(s)
-                if len(data) == 0:
-                    self.on_close(s)
-                    break
-                else:
-                    self.on_recv(s, data)
+@app.before_request
+def handle_preflight():
+    """处理OPTIONS预检请求"""
+    if request.method == 'OPTIONS':
+        resp = Response()
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        resp.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        resp.headers['Access-Control-Max-Age'] = '86400'
+        return resp
 
-        # Close all sockets
-        for s in self.input_list:
-            s.close()
-        self.input_list.clear()
-        self.channels.clear()
-        self.clients.clear()
-        self.server.close()
+@app.route(SHUTDOWN_ENDPOINT, methods=['GET', 'POST'])
+def shutdown_server():
+    """触发代理服务器关闭"""
+    global shutdown_flag
 
-    def on_accept(self):
-        clientsock, clientaddr = self.server.accept()
-        self.clients.append(clientaddr)
-        self.input_list.append(clientsock)
-        logging.info("{} has connected".format(clientaddr))
-        forward = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            forward.connect(('127.0.0.1', ZOTERO_PORT))
-        except socket.error as e:
-            logging.warning("Cannot connect to Zotero, is the app started?")
-            logging.debug("Failed to connect to Zotero: {}".format(e))
-            forward.close()
-            # NOTE: Cannot close client sockets here for it will discard quit commands.
-            return
-        self.input_list.append(forward)
-        self.channels[clientsock] = forward
-        self.channels[forward] = clientsock
+    with shutdown_lock:
+        if not shutdown_flag:
+            shutdown_flag = True
+            threading.Thread(target=delayed_shutdown).start()
+            return "Proxy shutting down...", 200
+        return "Shutdown already initiated", 202
 
-    def on_close(self, s):
-        pname = s.getpeername()
-        if pname in self.clients:
-            self.clients.pop(self.clients.index(pname))
-        if s in self.channels:
-            out = self.channels[s]
-            out.close()
-            self.input_list.remove(out)
-            del self.channels[s]
-            del self.channels[out]
-        self.input_list.remove(s)
-        s.close()
-        logging.info("{} has disconnected".format(pname))
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+def proxy_handler(path):
+    """处理所有代理请求"""
+    # 检查是否为关闭请求
+    if request.path == SHUTDOWN_ENDPOINT:
+        return shutdown_server()
+    
+    return proxy_request()
 
-    def on_recv(self, s, data):
-        logging.debug('received data: {}'.format(data))
-        if data.startswith(b'POST /stopproxy'):
-            logging.info('received stopping command!')
-            s.close()
-            self.running = False
-            return
-        if s not in self.channels:
-            self.on_close(s)
-            return
-        # Parse HEAD
-        head_raw, _, body_raw = data.partition(b"\r\n\r\n")
-        request, headers = parse_head(head_raw)
-        if s.getpeername() in self.clients:
-            # Preflight responses
-            logging.info('message received on client {}'.format(s.getpeername()))
-            if data.startswith(b'OPTIONS') and 'Origin' in headers and 'Access-Control-Request-Method' in headers:
-                for k,v in PREFLIGHT_HEADERS.items():
-                    headers[k] = v
-                data = '\r\n'.join(['HTTP/1.0 200 OK'] + [': '.join(h) for h in headers.items()] + ['', '']).encode('utf8') + body_raw
-                s.sendall(data)
-                logging.info('responded to a preflight request')
-                return
-        else:
-            logging.info('message received from zotero')
-            # CORS
-            headers['Access-Control-Allow-Origin'] = '*'
-            data = '\r\n'.join([request] + [': '.join(h) for h in headers.items()] + ['', '']).encode('utf8') + body_raw
-        self.channels[s].send(data)
-        logging.info('responded to {}'.format(self.channels[s].getpeername()))
+def delayed_shutdown():
+    """延迟关闭服务器确保响应已发送"""
+    time.sleep(1)  # 给响应时间完成
+    os.kill(os.getpid(), 15)  # 发送SIGTERM信号
 
-
-def main(argv):
-    # Configure logging
-    if os.name == 'posix':
-        logfile = os.environ['HOME'] + '/.wps-zotero-proxy.log'
-    else:
-        logfile = os.environ['APPDATA'] + '\\kingsoft\\wps\\jsaddons\\wps-zotero-proxy.log'
-    if os.path.exists(logfile) and os.path.getsize(logfile) > 100 * 1024:
-        os.remove(logfile)
-    logging.basicConfig(filename=logfile,
-                        filemode='a',
-                        format='%(asctime)s.%(msecs)03d %(levelname)s %(module)s: %(message)s',
-                        datefmt='%Y-%m-%d %H:%M:%S',
-                        level=logging.INFO)
-
-    if len(argv) < 2:
-        try:
-            server = ProxyServer('127.0.0.1', PROXY_PORT)
-            logging.info('proxy started!')
-            atexit.register(lambda : logging.info('proxy stopped!'))
-            server.run()
-        except Exception as e:
-            if isinstance(e, socket.error) and e.errno == errno.EADDRINUSE:
-                logging.warning("port is already binded!")
-                sys.exit()
-            else:
-                logging.error('encountered unexpected error, exiting!')
-                logging.error(e)
-                logging.error(traceback.format_exc())
-    else:
-        if (argv[1] == 'kill'):
-            stop_proxy()
-
+def run_server():
+    from waitress import serve
+    print(f"代理服务器运行在: http://0.0.0.0:{PROXY_PORT}")
+    print(f"目标服务器地址: {TARGET_URL}")
+    print(f"停止代理: curl http://localhost:{PROXY_PORT}{SHUTDOWN_ENDPOINT}")
+    serve(app, host="0.0.0.0", port=PROXY_PORT)
 
 if __name__ == '__main__':
-    main(sys.argv)
+    run_server()
