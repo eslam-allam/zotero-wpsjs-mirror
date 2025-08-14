@@ -895,8 +895,10 @@ function zc_cleanTempFields(doc) {
     }
 }
 
-
-function createAndInsertHtml(range,str){
+/**
+ * 插入xml数据
+**/
+function createAndInsertHtml(str){
     var html=`<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -904,6 +906,34 @@ function createAndInsertHtml(range,str){
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
+        <style>
+        /* 必须添加这些基础样式 */
+        body {
+            font-family: 'Times New Roman', SimSun, serif;
+            margin: 0;
+            padding: 0.5in;
+        }
+        
+        /* Word兼容性关键样式 */
+        .csl-entry {
+            margin-bottom: 12pt; /* 使用pt单位确保Word兼容 */
+        }
+        
+        .csl-left-margin {
+            display: inline-block;
+            width: 24pt;         /* 固定宽度保证序号对齐 */
+            vertical-align: top;  /* 防止行高不一致导致错位 */
+        }
+        
+        .csl-right-inline {
+            display: inline;
+            
+        }
+        
+        /* 保持斜体和链接样式 */
+        i { font-style: italic; }
+        a { color: #0000FF; text-decoration: underline; }
+    </style>
     </head>
     <body>
       
@@ -959,7 +989,8 @@ function zc_replaceFieldRichText(field, text, bibStyle) {
             bibStyle_ = zc_getBibStyle(doc, field);
         }
         if (bibStyle_) {
-        	 let xmlStr = text
+        	 let xmlStr = text .replace(/<div class="csl-left-margin">(.*?)<\/div>/g, '<span class="csl-left-margin">$1</span>')
+        	 	.replace(/<div class="csl-right-inline">(.*?)<\/div>/g, '<span class="csl-right-inline">$1</span>');
 
             range.Select()
          createAndInsertHtml(xmlStr)
@@ -981,34 +1012,7 @@ function zc_replaceFieldRichText(field, text, bibStyle) {
 
     return ret;
 }
-/**
- * 插入xml数据
-**/
-function createAndInsertHtml(str){
-    var html=`<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-    </head>
-    <body>
-      
-	${str}
 
-    </body>
-    </html>`
-    var path = FileSystem.tmpdir() + "/tempHtml.html"
-    FileSystem.WriteFile(path, html);//生成html文件
-    if(FileSystem.Exists(path)){//插入生成的网页，并删除它
-      Selection.InsertFile(path)
-       FileSystem.Remove(path)
-    }else{
-        alert("html文件不存在")
-    }
-    return true;
-}
 // An interface supplied to the zotero client to operate WPS.
 var zc_wps = {
     /**
