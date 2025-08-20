@@ -2,3 +2,10 @@
 path = wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/zotero-jsa_1.0.0/Zotero-Jsa.dotm`
 Application.AddIns.Add(path, true)
 Application.AddIns.Item("Zotero-Jsa.dotm").Installed = true
+document.write("<script language='javascript' src='js/ribbon.js'></script>");
+document.write("<script language='javascript' src='js/util.js'></script>");
+document.write("<script language='javascript' src='version.js'></script>");
+document.write("<script language='javascript' src='js/wpsApp.js'></script>");
+document.write("<script language='javascript' src='js/JSA.js'></script>");
+document.write("<script language='javascript' src='js/zoteroHelper.js'></script>");
+document.write("<script language='javascript' src='js/zoteroSet.js'></script>");
