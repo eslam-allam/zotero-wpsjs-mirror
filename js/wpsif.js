@@ -912,7 +912,7 @@ function createAndInsertHtml(str){
             font-family: 'Times New Roman', SimSun, serif;
             margin: 0;
             padding: 0.5in;
-            text-align: justify !important;
+           
         }
         
         /* Word兼容性关键样式 */
