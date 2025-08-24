@@ -36,14 +36,14 @@ async function onbuttonclick(idStr)
                         return;
                     }else if(osInfo=="macos"){
                         window.Application.ActiveDocument.Save()
-                        window.Application.ActiveDocument.Saved= true
+                      
                         await  postRequestXHRAsync('http://127.0.0.1:21931/stopproxy', null)
                         runServers("uninstallZoteroAdd",'open '+ wps.Env.GetHomePath() + '/.kingsoft/wps/jsaddons/macUninstall.app','jsMaximizedFocus');
                         const tmpJson=window.Application.Env.GetTempPath()+"/settings.json"
                         if(window.Application.FileSystem.Exists(tmpJson)){
                            window.Application.FileSystem.Remove(tmpJson)
                         }
-                        window.Application.Quit(-1)
+                        window.Application.Quit(0)
                      
                         alert("卸载成功！")
                         return;
