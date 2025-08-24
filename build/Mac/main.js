@@ -1,4 +1,8 @@
 // included by index.html
+if (!window.Application.FileSystem.Exists(wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/zotero-jsa_1.0.0/Zotero-Jsa.dotm`)) {
+        alert("Zotero-wps核心文件丢失，请卸载插件，重新安装！！")
+        
+    }
 path = wps.Env.GetHomePath() + `/.kingsoft/wps/jsaddons/zotero-jsa_1.0.0/Zotero-Jsa.dotm`
 Application.AddIns.Add(path, true)
 Application.AddIns.Item("Zotero-Jsa.dotm").Installed = true

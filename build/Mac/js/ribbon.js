@@ -39,10 +39,10 @@ async function OnAddinLoad(ribbonUI) {
 
     //系统检测
     const osInfo = detectOS();
-    console.log("系统信息：" + osInfo)
+    //console.log("系统信息：" + osInfo)
     let settingsJson = getSettingsJson(osInfo);
     const zoteroPathValue = settingsJson.zoteroPath[osInfo];
-    console.log("配置文件" + settingsJson)
+    //console.log("配置文件" + settingsJson)
   
     if (osInfo == "macos") {
         const tmp = compareVersions(wps.Application.Build.split('.').map(Number))
