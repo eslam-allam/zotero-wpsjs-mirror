@@ -1039,6 +1039,7 @@ function zc_replaceFieldRichText(field, text, bibStyle) {
         range = field.Result;
         range.Collapse(wps.Enum.wdCollapseStart);
         range.Delete(wps.Enum.wdCharacter, 1);
+          range.Select()
     }
 
     return ret;
