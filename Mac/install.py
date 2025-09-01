@@ -8,8 +8,6 @@ import re
 import stat
 import subprocess
 import shutil
-from proxy import stop_proxy
-
 
 # Prevent running as root on Linux
 if platform.system() == 'Linux' and os.environ['USER'] == 'root':
@@ -68,7 +66,6 @@ PROXY_PATH = ADDON_PATH + os.path.sep + 'proxy.py'
 
 def uninstall():
     print("Trying to quit proxy server if it's currently listening...")
-    stop_proxy()
     
     def del_rw(action, name, exc):
         os.chmod(name, stat.S_IWRITE)
