@@ -57,7 +57,7 @@ function zc_matchHighlightColor(color) {
 function zc_getDocumentInDocuments(doc) {
     if (!doc) return doc;
     // Application.ActiveDocument is always the same object.
-    const doc0 = doc ? doc :Application.ActiveDocument.FullName; 
+    const doc0 = doc ? doc : Application.ActiveDocument.FullName;
     const fullName = doc0.FullName;
     for (let i = 1; i <= Application.Documents.Count; i++) {
         const doc1 = Application.Documents.Item(i);
@@ -131,7 +131,7 @@ function zc_registryRemove(doc) {
             delete zc_registry.doc_client[doc_];
             delete zc_registry.doc_id[doc_];
             return true;
-        } 
+        }
         else {
             return false;
         }
@@ -236,8 +236,8 @@ function zc_setDocProperty(doc, name, dataStr) {
     const len = dataStr.length;
     const segCount = parseInt(len / 255) + 1;
     for (let i = 0; i < segCount; i++) {
-        const seg = dataStr.substring(i*255, len > (i+1)*255 ? (i+1)*255 : len);
-        props.Add(`${name}_${i+1}`, false, wps.Enum.msoPropertyTypeString, seg)
+        const seg = dataStr.substring(i * 255, len > (i + 1) * 255 ? (i + 1) * 255 : len);
+        props.Add(`${name}_${i + 1}`, false, wps.Enum.msoPropertyTypeString, seg)
     }
 }
 
@@ -266,7 +266,7 @@ function zc_bind(doc) {
     // return the existing client if already registered
     const tmp = zc_getDocumentId(doc_);
     if (tmp) return zc_getClientById(tmp);
-    
+
     // create new client
     const id = makeId(36);
     console.debug(`add client id = ${id}`);
@@ -277,13 +277,13 @@ function zc_bind(doc) {
 
     // bind citation fields with ids
     client.fields = {};
-    client.getFieldCount = function() {
+    client.getFieldCount = function () {
         return Object.keys(this.fields).length;
     }
-    client.getField = function(fId) {
+    client.getField = function (fId) {
         return fId ? client.fields[fId] : null;
     };
-    client.getFieldId = function(field) {
+    client.getFieldId = function (field) {
         // Compare indexes rather than objects. Direct compare will always fail since the api creates new objects for every call. Also note that holding references on anyone of them will cause problems.
         if (field) {
             for (const fId in this.fields) {
@@ -294,10 +294,10 @@ function zc_bind(doc) {
             }
         }
     };
-    client.clearAllFieldIds = function() {
+    client.clearAllFieldIds = function () {
         this.fields = {};
     };
-    client.unregisterField = function(field) {
+    client.unregisterField = function (field) {
         let ret = false;
         if (field) {
             for (const fId in this.fields) {
@@ -459,11 +459,11 @@ function zc_insertXMLNode(range, node, disableHyperlinks) {
                             // To make this work will need a equation parser.
                             // Do nothing because equation env is different on Windows and the following piece of code will cause error.
                             break;
-                            
+
                             let text = _range.Text;
                             // Remove guarding $$
                             text = text.substring(2);
-                            text = text.substr(0, text.length-2);
+                            text = text.substr(0, text.length - 2);
                             // Remove equation text
                             _range.Text = '';
                             // Create a math environment and move the equation text into it.
@@ -790,11 +790,11 @@ function zc_convertHyperlinkToField(hyperlink) {
 **/
 function zc_getCslData(field) {
     let data = null;
-    const code =field.Code.Text;
+    const code = field.Code.Text;
     const idx0 = code.indexOf(zc_consts.citationHead);
     const idx1 = code.indexOf(zc_consts.citationHeadM);
     const idx = (idx0 === 0 ? zc_consts.citationHead.length :
-                (idx1 === 1 ? zc_consts.citationHeadM.length + 1: 0));
+        (idx1 === 1 ? zc_consts.citationHeadM.length + 1 : 0));
     if (idx > 0) {
         data = JSON.parse(code.substring(idx));
     }
@@ -929,62 +929,6 @@ function zc_cleanTempFields(doc) {
     }
 }
 /**
- * 插入xml数据
-**/
-function createAndInsertHtml(str){
-    var html=`<!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        <style>
-        /* 必须添加这些基础样式 */
-        body {
-            font-family: 'Times New Roman', SimSun, serif;
-            margin: 0;
-            padding: 0.5in;
-        }
-        
-        /* Word兼容性关键样式 */
-        .csl-entry {
-            margin-bottom: 12pt; /* 使用pt单位确保Word兼容 */
-        }
-        
-        .csl-left-margin {
-            display: inline-block;
-            width: 24pt;         /* 固定宽度保证序号对齐 */
-            vertical-align: top;  /* 防止行高不一致导致错位 */
-        }
-        
-        .csl-right-inline {
-            display: inline;
-            
-        }
-        
-        /* 保持斜体和链接样式 */
-        i { font-style: italic; }
-        a { color: #0000FF; text-decoration: underline; }
-    </style>
-    </head>
-    <body>
-      
-	${str}
-
-    </body>
-    </html>`
-    var path = window.Application.FileSystem.tmpdir() + "/tempHtml.html"
-    window.Application.FileSystem.WriteFile(path, html);//生成html文件
-    if(window.Application.FileSystem.Exists(path)){//插入生成的网页，并删除它
-      window.Application.Selection.InsertFile(path)
-       window.Application.FileSystem.Remove(path)
-    }else{
-        alert("html文件不存在")
-    }
-    return true;
-}
-/**
  * Set rich text for zotero fields.
 **/
 function zc_replaceFieldRichText(field, text, bibStyle) {
@@ -1020,11 +964,7 @@ function zc_replaceFieldRichText(field, text, bibStyle) {
             bibStyle_ = zc_getBibStyle(doc, field);
         }
         if (bibStyle_) {
-            let xmlStr = text .replace(/<div class="csl-left-margin">(.*?)<\/div>/g, '<span class="csl-left-margin">$1</span>')
-        	 	.replace(/<div class="csl-right-inline">(.*?)<\/div>/g, '<span class="csl-right-inline">$1</span>');
-
-            range.Select()
-         createAndInsertHtml(xmlStr)
+            zc_insertBibEntries(range, text, bibStyle_);
         }
         else {
             range.InsertAfter("Missing bibliography formatting style, please restart Zotero and click update");
@@ -1039,7 +979,7 @@ function zc_replaceFieldRichText(field, text, bibStyle) {
         range = field.Result;
         range.Collapse(wps.Enum.wdCollapseStart);
         range.Delete(wps.Enum.wdCharacter, 1);
-          range.Select()
+
     }
 
     return ret;
@@ -1051,7 +991,7 @@ var zc_wps = {
      * Insert a citation field at cursor and register it.
      * Returns a data object representing the field.
     **/
-    insertField: function(docId, inFootnote, insertRange) {
+    insertField: function (docId, inFootnote, insertRange) {
         const client = zc_getClientById(docId);
         const doc = zc_getDocumentById(docId);
         let range = insertRange ? insertRange : doc.ActiveWindow.Selection.Range;
@@ -1080,7 +1020,7 @@ var zc_wps = {
     /**
      * Get the data of all citation fields as an array with each item consisting of field ID, text, code and adjacent.
     **/
-    getOrderedCitationData: function(docId) {
+    getOrderedCitationData: function (docId) {
         const doc = zc_getDocumentById(docId);
         const fieldsDataArr = [];
         // Fields in main texts.
@@ -1095,7 +1035,7 @@ var zc_wps = {
                 const data = zc_getZoteroFieldData(range.Fields.Item(j));
                 if (data) {
                     // Prevent adjacent fields to be added twice.
-                    if (fieldsDataArr.length > 0 && fieldsDataArr[fieldsDataArr.length-1].id === data.id) continue;
+                    if (fieldsDataArr.length > 0 && fieldsDataArr[fieldsDataArr.length - 1].id === data.id) continue;
                     fieldsDataArr.push(data)
                 }
             }
@@ -1108,7 +1048,7 @@ var zc_wps = {
      * Get the data of fields before and after the cursor.
      * When there's a visual selection, the cursor is the selection end.
     **/
-    getFieldsNearCursor: function(docId) {
+    getFieldsNearCursor: function (docId) {
         // NOTE: Return only the the field before the cursor just like other word processor integration plugins.
         const doc = zc_getDocumentById(docId);
         const client = zc_getClientById(docId);
@@ -1134,14 +1074,14 @@ var zc_wps = {
         return fields.length > 0 ? zc_getZoteroFieldData(fields[0]) : null;
     },
 
-    isInLink: function(docId) {
+    isInLink: function (docId) {
         const doc = zc_getDocumentById(docId);
         const range = doc.ActiveWindow.Selection.Range;
         range.Collapse(wps.Enum.wdCollapseEnd);
         return range.Hyperlinks.Count > 0 ? true : false;
     },
 
-    displayDialog: function(msg, icon, buttons) {
+    displayDialog: function (msg, icon, buttons) {
         var r = 0;
         if (buttons <= 0) {
             zc_alert(msg);
@@ -1162,7 +1102,7 @@ var zc_wps = {
         return r;
     },
 
-    activate: function(docId) {
+    activate: function (docId) {
         zc_getDocumentById(docId).Activate();
         const appPath = Application.Path;
         const appIndex = appPath.indexOf(".app") + ".app".length;//包含.app
@@ -1170,7 +1110,7 @@ var zc_wps = {
         runServers('openWPS', 'open -a ' + appPathValue, 'jsMaximizedFocus')
     },
 
-    getDocData: function(docId) {
+    getDocData: function (docId) {
         let dataStr = zc_getDocProperty(zc_getDocumentById(docId), zc_consts.prefDocDataName);
         // MS Word compatibility
         dataStr = dataStr.replaceAll('value="Field"', 'value="Http"');
@@ -1180,13 +1120,13 @@ var zc_wps = {
         return dataStr;
     },
 
-    setDocData: function(docId, dataStr) {
+    setDocData: function (docId, dataStr) {
         // MS Word compatibility
         const dataStr_ = dataStr.replaceAll('value="Http"', 'value="Field"');
         zc_setDocProperty(zc_getDocumentById(docId), zc_consts.prefDocDataName, dataStr_);
     },
 
-    setFieldCode: function(docId, fieldId, code) {
+    setFieldCode: function (docId, fieldId, code) {
         // Compatible with MS Word integration
         const code_ = zc_tweakFieldCode(code, 'Microsoft');
         const client = zc_getClientById(docId);
@@ -1197,7 +1137,7 @@ var zc_wps = {
         field.Code.Text = code_;
     },
 
-    getFields: function(docId) {
+    getFields: function (docId) {
         const records = this.getOrderedCitationData(docId);
         // This should be needed only here!
         // NOTE: Zotero will try to set temp field code to `{}`, but we don't take that order because it will result in invisible fields. As a workaround, we keep `TEMP` as the code for temp fields, but report to Zotero it's `{}`.
@@ -1209,7 +1149,7 @@ var zc_wps = {
         return records;
     },
 
-    insertRich: function(docId, text) {
+    insertRich: function (docId, text) {
         const doc = zc_getDocumentById(docId);
         if (!zc_insertRichText(doc.ActiveWindow.Selection.Range, text)) {
             console.warn(`Invalid xml string: ${text}, insert it as plain string instead!`);
@@ -1218,7 +1158,7 @@ var zc_wps = {
         };
     },
 
-    deleteField: function(docId, fieldId) {
+    deleteField: function (docId, fieldId) {
         const client = zc_getClientById(docId);
         const field = client.getField(fieldId);
         if (field) {
@@ -1231,7 +1171,7 @@ var zc_wps = {
         }
     },
 
-    selectField: function(docId, fieldId) {
+    selectField: function (docId, fieldId) {
         const client = zc_getClientById(docId);
         const field = client.getField(fieldId);
         if (field && field.Index > 0) {
@@ -1241,7 +1181,7 @@ var zc_wps = {
         return false;
     },
 
-    removeFieldCode: function(docId, fieldId) {
+    removeFieldCode: function (docId, fieldId) {
         const client = zc_getClientById(docId);
         const field = client.getField(fieldId);
         if (field && field.Index > 0) {
@@ -1255,7 +1195,7 @@ var zc_wps = {
     /**
      * Store bibliography style as a property and as a custom document property.
     **/
-    setBibStyle: function(docId, firstLineIndent, indent, lineSpacing, entrySpacing, tabStops, tabStopsCount) {
+    setBibStyle: function (docId, firstLineIndent, indent, lineSpacing, entrySpacing, tabStops, tabStopsCount) {
         this.bibStyle = {
             firstLineIndent: firstLineIndent,
             indent: indent,
@@ -1271,12 +1211,12 @@ var zc_wps = {
     /**
      * Set field texts. Used for both citation fields and bibliography fields.
     **/
-    setFieldText: function(docId, fieldId, text, isRich) {
+    setFieldText: function (docId, fieldId, text, isRich) {
         const client = zc_getClientById(docId);
         const field = client.getField(fieldId);
         if (field && field.Index > 0) {
             if (isRich) {
-                const textSafe = '<div>' + text  + '</div>';
+                const textSafe = '<div>' + text + '</div>';
                 if (!zc_replaceFieldRichText(field, textSafe, this.bibStyle)) {
                     console.warn(`Failed to insert rich text: ${text}, insert as plain text instead!`);
                     field.Result.Text = text;
@@ -1290,7 +1230,7 @@ var zc_wps = {
         return false;
     },
 
-    getFieldText: function(docId, fieldId) {
+    getFieldText: function (docId, fieldId) {
         const client = zc_getClientById(docId);
         const field = client.getField(fieldId);
         if (field && field.Index > 0) {
@@ -1299,7 +1239,7 @@ var zc_wps = {
         return '';
     },
 
-    convertToNoteType: function(docId, fieldIds, toNoteTypes) {
+    convertToNoteType: function (docId, fieldIds, toNoteTypes) {
         const client = zc_getClientById(docId);
         assert(fieldIds.length === toNoteTypes.length);
         for (let i = 0; i < fieldIds.length; i++) {
@@ -1323,7 +1263,7 @@ var zc_wps = {
         }
     },
 
-    exportDocument: function(docId) {
+    exportDocument: function (docId) {
         const doc = zc_getDocumentById(docId);
 
         // clean all zombie fields
@@ -1445,12 +1385,12 @@ var zc_wps = {
         return fieldDataArr;
     },
 
-    init: function(docId) {
+    init: function (docId) {
         // Index existing fields
         zc_indexCitationFields(zc_getDocumentById(docId));
     },
 
-    reset: function(docId) {
+    reset: function (docId) {
         // IMPORTANT: Release references on field objects. Should be called as soon as possible when the field map is not needed.
         // NOTE: Holding strong references to fields will cause serious problems when fields get deleted. Also, you cannot hold weak references because the field objects returned by the wps api is just dummies and they will be garbage colleted even when the actual fields still exist.
         const doc = zc_getDocumentById(docId);
