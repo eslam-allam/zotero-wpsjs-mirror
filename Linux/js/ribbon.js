@@ -20,7 +20,7 @@ function zc_alert(msg) {
 /**
  * Callback for plugin loading.
 **/
-async function OnAddinLoad(ribbonUI) {
+function OnAddinLoad(ribbonUI) {
     if (typeof (wps.Enum) !== "object") {
         wps.Enum = WPS_Enum;
         zc_alert('You are using an old version of WPS, this plugin might not work properly!');
@@ -77,8 +77,8 @@ async function OnAddinLoad(ribbonUI) {
                 const hasCitation = myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
                 if (hasCitation) {
                     if (!settingsJson.mouseFollow) {
-                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview","引注预览")
-                       
+                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
+
                         return
                     }
                     const topFlag = window.Application.PluginStorage.getItem("topTo")
@@ -145,7 +145,7 @@ function OnAction(control) {
             break;
         case "btnCitationHyperlinks":
             //checkAndRunZotero()//给予zotero焦点
-          bindCitationsToBookmarks()
+            bindCitationsToBookmarks()
             break;
         case "btnUnlink":
             //checkAndRunZotero()//给予zotero焦点
@@ -258,7 +258,7 @@ function SettingsOnAction(selectedId) {
             window.Application.ShowDialog(GetUrlPath() + "/ui/About.html", "关于", 600 * window.devicePixelRatio, 480 * window.devicePixelRatio, false, true)
             break;
         case "btnZoteroSet":
-            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 300 * window.devicePixelRatio, false, true)
+            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 600 * window.devicePixelRatio, 460 * window.devicePixelRatio, false, true)
             break;
 
 
