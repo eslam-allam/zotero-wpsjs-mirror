@@ -27,26 +27,53 @@ class ProxyHandler(http.server.BaseHTTPRequestHandler):
             return
         
         # 3. 普通请求转发逻辑
-        conn = http.client.HTTPConnection(TARGET_HOST, TARGET_PORT)
-        headers = {k: v for k, v in self.headers.items() if k != "Host"}
-        body = None
-        if method in ["POST", "PUT", "DELETE"] and "Content-Length" in self.headers:
-            content_length = int(self.headers["Content-Length"])
-            body = self.rfile.read(content_length)
-        
-        conn.request(method, path_query, body=body, headers=headers)
-        response = conn.getresponse()
-        
-        # 4. 返回代理响应
-        self.send_response(response.status)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        for header, value in response.getheaders():
-            self.send_header(header, value)
-        self.end_headers()
-        self.wfile.write(response.read())
-        conn.close()
+        conn = None
+        try:
+            # 使用更短的超时时间，避免连接堆积
+            conn = http.client.HTTPConnection(TARGET_HOST, TARGET_PORT, timeout=10)
+            headers = {k: v for k, v in self.headers.items() if k != "Host"}
+            body = None
+            if method in ["POST", "PUT", "DELETE"] and "Content-Length" in self.headers:
+                content_length = int(self.headers["Content-Length"])
+                body = self.rfile.read(content_length)
+            
+            conn.request(method, path_query, body=body, headers=headers)
+            response = conn.getresponse()
+            
+            # 4. 返回代理响应
+            self.send_response(response.status)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+            for header, value in response.getheaders():
+                self.send_header(header, value)
+            self.end_headers()
+            self.wfile.write(response.read())
+            
+        except (ConnectionRefusedError, http.client.HTTPException, OSError) as e:
+            print(f"代理转发错误: {e}")
+            # 返回错误响应
+            self.send_response(503)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            error_response = {"error": "Zotero服务不可用", "message": str(e)}
+            self.wfile.write(str(error_response).encode())
+        except Exception as e:
+            print(f"未知错误: {e}")
+            self.send_response(500)
+            self.send_header("Access-Control-Allow-Origin", "*")
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            error_response = {"error": "代理服务器错误", "message": str(e)}
+            self.wfile.write(str(error_response).encode())
+        finally:
+            # 确保连接总是被关闭
+            if conn:
+                try:
+                    conn.close()
+                except:
+                    pass
 
     # 支持所有HTTP方法
     def do_GET(self): self.handle_request("GET")
