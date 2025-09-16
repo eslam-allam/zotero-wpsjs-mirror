@@ -117,36 +117,7 @@ async function OnAddinLoad(ribbonUI) {
  * Callback for button clicking events.
 **/
 function OnAction(control) {
-    const eleId = control.Id
-        
-    // 检查代理服务器状态
-    try {
-        const testReq = new XMLHttpRequest();
-        testReq.open('GET', 'http://127.0.0.1:21931/connector/document/execCommand', false);
-        testReq.timeout = 1000;
-        testReq.send();
-        
-        if (testReq.status === 0 || testReq.status >= 500) {
-            console.log('代理服务器不可用，正在重启...');
-            const osInfo = detectOS();
-            runProxy(osInfo);
-        }
-    } catch (e) {
-        console.log('代理服务器检查失败，正在重启...');
-        const osInfo = detectOS();
-        runProxy(osInfo);
-    }
-    
-    // 检查并重启代理服务器（防止连接堆积）
-    checkAndRestartProxy();
-    
-    // 强制清理之前的连接
-    try {
-        zc_clearRegistry();
-    } catch (e) {
-        console.warn('清理注册表时出错:', e);
-    }
-    
+    const eleId = control.Id 
     switch (eleId) {
         case "btnAddEditCitation":
 
@@ -298,50 +269,4 @@ function SettingsOnAction(selectedId) {
     }
     return true;
 }
-// 重启代理服务器
-function restartProxy() {
-    try {
-        console.log('正在重启代理服务器...');
-        
-        // 停止当前代理
-        const stopReq = new XMLHttpRequest();
-        stopReq.open('GET', 'http://127.0.0.1:21931/stopproxy', false);
-        stopReq.timeout = 2000;
-        stopReq.send();
-        
-        // 等待2秒确保代理完全停止
-        const start = Date.now();
-        while (Date.now() - start < 2000) {
-            // 等待2秒
-        }
-        
-        // 重新启动代理
-        const osInfo = detectOS();
-        runProxy(osInfo);
-        
-        console.log('代理服务器重启完成');
-    } catch (e) {
-        console.warn('重启代理服务器失败:', e);
-        // 如果重启失败，尝试直接启动
-        try {
-            const osInfo = detectOS();
-            runProxy(osInfo);
-            console.log('直接启动代理服务器成功');
-        } catch (e2) {
-            console.error('直接启动代理服务器也失败:', e2);
-        }
-    }
-}
-
-// 检查并重启代理服务器（在第三次操作时）
-let operationCount = 0;
-function checkAndRestartProxy() {
-    operationCount++;
-    if (operationCount >= 3) {
-        console.log('检测到多次操作，重启代理服务器以防止连接堆积');
-        restartProxy();
-        operationCount = 0; // 重置计数器
-    }
-}
-
 
