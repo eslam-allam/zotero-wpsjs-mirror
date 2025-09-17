@@ -53,8 +53,6 @@ function zc_createClient(documentId, processor) {
         processor.init(documentId);
 
         let flag = false;
-        let responseCount = 0;
-        const maxResponses = 20; // 限制最大响应次数，防止无限循环
         try {
             // Make request
             let req = execCommand(command);
@@ -62,23 +60,8 @@ function zc_createClient(documentId, processor) {
             flag = true;
             if (req.status < 300) {
                 // Keep responding until the transaction is fullfilled
-                while (req && req.status < 300 && responseCount < maxResponses) {
+                while (req && req.status < 300) {
                     req = autoRespond(req);
-                    responseCount++;
-
-                    // 添加小延迟，避免过于频繁的请求
-                    if (responseCount > 5) {
-                        // 简单的延迟，避免阻塞UI
-                        const start = Date.now();
-                        while (Date.now() - start < 10) {
-                            // 10ms延迟
-                        }
-                    }
-                }
-
-                if (responseCount >= maxResponses) {
-                    console.warn('达到最大响应次数限制，可能存在循环');
-                    state = false;
                 }
             }
             else {
@@ -107,7 +90,7 @@ function zc_createClient(documentId, processor) {
 
     // Functions for responding to different word processor commands
     let responders = {
-        getActiveDocument: function () {
+        getActiveDocument: function() {
             return respond({
                 "documentID": documentId,
                 "outputFormat": "html",
@@ -115,11 +98,11 @@ function zc_createClient(documentId, processor) {
                 "supportsImportExport": true,
                 "supportsTextInsertion": true,
                 "supportsCitationMerging": true,
-                "processorName": "Google Docs"
+                "processorName":"Google Docs"
             });
         },
 
-        displayAlert: function (args) {
+        displayAlert: function(args) {
             const msg = args[1];
             const icon = args[2];
             const buttons = args[3];
@@ -127,21 +110,21 @@ function zc_createClient(documentId, processor) {
             return respond(ret);
         },
 
-        activate: function (args) {
+        activate: function(args) {
             const docId = args[0];
             assert(docId === documentId);
             processor.activate(documentId);
             return respond(null);
         },
 
-        canInsertField: function (args) {
+        canInsertField: function(args) {
             const docId = args[0];
             assert(docId === documentId);
             // TODO: Other cases a field cannot be inserted?
             return respond(!processor.isInLink(documentId));
         },
 
-        setDocumentData: function (args) {
+        setDocumentData: function(args) {
             const docId = args[0];
             const dataStr = args[1];
             assert(docId === documentId);
@@ -153,7 +136,7 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        getDocumentData: function (args) {
+        getDocumentData: function(args) {
             const defaultDocDataV3 = '<data data-version="3"/>';
             // const defaultDocDataV4 = JSON.stringify("{\"dataVersion\": 4}");
             const docId = args[0];
@@ -169,27 +152,27 @@ function zc_createClient(documentId, processor) {
             return respond(dataStr);
         },
 
-        cursorInField: function (args) {
+        cursorInField: function(args) {
             const docId = args[0];
             assert(docId === documentId);
             return respond(processor.getFieldsNearCursor(documentId));
         },
 
-        insertField: function (args) {
+        insertField: function(args) {
             const docId = args[0];
             const fieldType = args[1];
             const noteType = args[2];//noteType=2时，表示插入尾注
             assert(docId === documentId);
             assert(fieldType === 'Http');
-            /*   if (noteType > 1) {
-                  console.warn('Only support in-text and footnote citations, will use footnote instead!');
-                  noteType = 1;
-              } */
+          /*   if (noteType > 1) {
+                console.warn('Only support in-text and footnote citations, will use footnote instead!');
+                noteType = 1;
+            } */
             const data = processor.insertField(docId, noteType > 0 ? true : false);
             return respond(data);
         },
 
-        insertText: function (args) {
+        insertText: function(args) {
             const docId = args[0];
             const text = args[1];
             assert(docId === documentId);
@@ -197,14 +180,14 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        getFields: function (args) {
+        getFields: function(args) {
             const docId = args[0];
             assert(docId === documentId);
             const data = processor.getFields(docId, true);
             return respond(data);
         },
 
-        convert: function (args) {
+        convert: function(args) {
             const docId = args[0];
             const fieldIds = args[1];
             const toFieldType = args[2];
@@ -217,7 +200,7 @@ function zc_createClient(documentId, processor) {
         },
 
         // Convert the placeholders in notes to citation fields.
-        convertPlaceholdersToFields: function (args) {
+        convertPlaceholdersToFields: function(args) {
             const docId = args[0];
             const placeholderIds = args[1];
             const noteType = args[2];
@@ -227,7 +210,7 @@ function zc_createClient(documentId, processor) {
             return respond(fields);
         },
 
-        setBibliographyStyle: function (args) {
+        setBibliographyStyle: function(args) {
             const docId = args[0];
             const firstLineIndent = args[1];
             const indent = args[2];
@@ -240,13 +223,13 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        complete: function (args) {
+        complete: function(args) {
             delete args;
             // const docId = args[0];
             // assert(docId === documentId);
         },
 
-        delete: function (args) {
+        delete: function(args) {
             const docId = args[0];
             const fieldId = args[1];
             assert(docId === documentId);
@@ -254,7 +237,7 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        select: function (args) {
+        select: function(args) {
             const docId = args[0];
             const fieldId = args[1];
             assert(docId === documentId);
@@ -262,7 +245,7 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        removeCode: function (args) {
+        removeCode: function(args) {
             const docId = args[0];
             const fieldId = args[1];
             assert(docId === documentId);
@@ -270,7 +253,7 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        setText: function (args) {
+        setText: function(args) {
             const docId = args[0];
             const fieldId = args[1];
             const text = args[2];
@@ -279,14 +262,14 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        getText: function (args) {
+        getText: function(args) {
             const docId = args[0];
             const fieldId = args[1];
             const text = processor.getFieldText(docId, fieldId);
             return respond(text);
         },
 
-        setCode: function (args) {
+        setCode: function(args) {
             const docId = args[0];
             assert(docId === documentId);
             const fieldId = args[1];
@@ -295,7 +278,7 @@ function zc_createClient(documentId, processor) {
             return respond(null);
         },
 
-        exportDocument: function (args) {
+        exportDocument: function(args) {
             const docId = args[0];
             // args[1] == Http
             const msg = args[2];
@@ -313,7 +296,7 @@ function zc_createClient(documentId, processor) {
         const payload = req.payload;
         const method = payload.command.split('.')[1];
         const args = Array.from(payload.arguments);
-        if (args.length > 0) {
+        if (args.length > 0) { 
             var docID = args[0];
             assert(docID === documentId);
         }
@@ -329,3 +312,4 @@ function zc_createClient(documentId, processor) {
     };
 }
 
+    
