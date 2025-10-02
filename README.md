@@ -17,7 +17,7 @@ Zotero-WPSJS文字加载项，一款**学术论文管理软件Zotero** 和**WPS�
 
 **Win**端请注意：请关闭安全软件，再下载和安装本插件，或者将 proxy.exe 添加到安全软件的信任里。
 
-**Mac**端用户注意：WPS版本 >= 6.15，   Zotero 版本7  卡红条请安装jsa版本，具体参照b站安装视频
+**Mac**端用户注意：WPS版本 >= 6.15，   Zotero 版本7  Zotero-wpsjs当前存在卡红条bug未能解决，请安装jsa版本，具体参照视频教程[B站视频](https://b23.tv/tvqvX9g)
 
 请前往zotero软件 设置 ----> 高级----> 勾选“允许此计算机上的其他程序与zotero通信”
 
