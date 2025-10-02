@@ -52,6 +52,8 @@ Zotero相关使用教程https://zotero-chinese.com/user-guide/
 
    方法2.点击插件 About ---> 卸载插件
 
+   方法3. %appdata%/kingsoft/wps/jsaddons/  前往此路径，删除所有文件和文件夹(此操作会删除所有加载项，请谨慎操作)
+
 ### 3.2 Linux平台
 
 WPS相关设置: 工具--->宏安全性--->可靠发行商--->勾选 '信任对于wpsjs项目的访问'
@@ -65,6 +67,8 @@ python3 install.py
 方法1.关闭wps后，执行Linux项目内 uninstall.py
 
 方法2.点击插件 About ---> 卸载插件
+
+方法3. ~/.local/share/Kingsoft/wps/jsaddons   前往此路径，删除所有文件和文件夹(此操作会删除所有加载项，请谨慎操作)
 
 ### 3.3 Mac平台
 
@@ -83,6 +87,8 @@ WPS相关设置: 工具--->宏安全性--->可靠发行商--->勾选 '信任对�
 方法1.关闭wps后，执行Mac项目内 macUninstall.app 
 
 方法2.点击插件 About ---> 卸载插件
+
+方法3. ~/Library/Containers/com.kingsoft.wpsoffice.mac/Data/.kingsoft/wps/jsaddons 前往此路径，删除所有文件和文件夹(此操作会删除所有加载项，请谨慎操作)
 
 ## 🙏 致谢
 
