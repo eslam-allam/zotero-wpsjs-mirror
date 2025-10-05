@@ -187,7 +187,7 @@ function GetImage(control) {
         case "zhipuItem":
             return "images/zhipu.png";
         case "tongyiItem":
-            return "images/tongyi.svg";
+            return "images/tongyi.png";
         case "doubaoItem":
             return "images/doubao.png";
         case "kimiItem":
