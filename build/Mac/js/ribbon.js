@@ -41,16 +41,18 @@ async function OnAddinLoad(ribbonUI) {
     const osInfo = detectOS();
     //console.log("系统信息：" + osInfo)
     let settingsJson = getSettingsJson(osInfo);
+
+    const addonpath=getAddonPath(osInfo)
     const zoteroPathValue = settingsJson.zoteroPath[osInfo];
     //console.log("配置文件" + settingsJson)
-  
-    if (osInfo == "macos") {
-        const tmp = compareVersions(wps.Application.Build.split('.').map(Number))
-        if (!tmp) {
-            alert("你的wps版本无法运行插件，请至 https://www.wps.cn 更新到最新版本！！")
-        }
-    }
+     const dotmPath = addonpath + `/Zotero-Jsa.dotm`
+    if (!window.Application.FileSystem.Exists(dotmPath)) {
+        alert("Zotero-wps核心文件丢失，请卸载插件，重新安装！！")
 
+    }
+   
+    Application.AddIns.Add(dotmPath, true)
+    Application.AddIns.Item("Zotero-Jsa.dotm").Installed = true
     if (settingsJson.zoteroSwitch) {
         runZotero(osInfo, zoteroPathValue);
     }
@@ -78,12 +80,12 @@ async function OnAddinLoad(ribbonUI) {
                 const hasCitation = myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
                 if (hasCitation) {
                     if (!settingsJson.mouseFollow) {
-                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview","引注预览")
-                   
+                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
+
                         return
                     }
                     const topFlag = window.Application.PluginStorage.getItem("topTo")
-                    if(topFlag){
+                    if (topFlag) {
                         return
                     }
                     window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "引注预览", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 30) * window.devicePixelRatio)
@@ -118,27 +120,27 @@ function OnAction(control) {
     switch (eleId) {
         case "btnAddEditCitation":
 
-           Application.Run("btnEditCitation")
+            Application.Run("btnEditCitation")
 
             break;
         case "btnAddEditBib":
             Application.Run("btnEditBibliography")
             break;
         case "btnRefresh":
-             Application.Run("btnRefresh")
+            Application.Run("btnRefresh")
             break;
         case "btnPref":
-           Application.Run("btnSetDocPrefs")
+            Application.Run("btnSetDocPrefs")
             break;
-       case "btnCitationHyperlinks":
+        case "btnCitationHyperlinks":
             //checkAndRunZotero()//给予zotero焦点
-          bindCitationsToBookmarks()
+            bindCitationsToBookmarks()
             break;
         case "btnUnlink":
-           Application.Run("btnUnlink")
+            Application.Run("btnUnlink")
             break;
         case "btnAddNote":
-           Application.Run("btnInsertNote")
+            Application.Run("btnInsertNote")
             break;
         case "btnDonate":
             {
@@ -166,7 +168,7 @@ function GetImage(control) {
             return "images/addNote.png";
         case "btnUnlink":
             return "images/unlink.svg";
-       case "btnCitationHyperlinks":
+        case "btnCitationHyperlinks":
             return "images/Hyperlinks.png";
         case "btnDonate":
             return "images/Donate.png";
