@@ -19,13 +19,9 @@ async function onbuttonclick(idStr)
                 if(conValue){
 
                     if(osInfo=="windows"){
-                        window.Application.ActiveDocument.Save()
-                  
                        
-                        window.Application.ActiveDocument.Saved= true
-                        await  postRequestXHRAsync('http://127.0.0.1:21931/stopproxy', null)
                         
-                        runServers("uninstallZoteroAddin",wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/winUninstall.exe','jsMaximizedFocus');
+                        runServers("uninstallZoteroAddin",wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/Uninstall.py','jsMaximizedFocus');
                          const tmpJson=window.Application.Env.GetTempPath()+"/settings.json"
                          if(window.Application.FileSystem.Exists(tmpJson)){
                             window.Application.FileSystem.Remove(tmpJson)
