@@ -20,7 +20,7 @@ function zc_alert(msg) {
 /**
  * Callback for plugin loading.
 **/
-async function OnAddinLoad(ribbonUI) {
+ function OnAddinLoad(ribbonUI) {
     const osInfo = detectOS();
     const tutorial = getAddonPath(osInfo)
     let settingsJson = getSettingsJson(osInfo);
