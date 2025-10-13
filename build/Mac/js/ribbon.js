@@ -43,7 +43,7 @@ async function OnAddinLoad(ribbonUI) {
     let settingsJson = getSettingsJson(osInfo);
 
     const addonpath=getAddonPath(osInfo)
-    const zoteroPathValue = settingsJson.zoteroPath[osInfo];
+   
     //console.log("配置文件" + settingsJson)
      const dotmPath = addonpath + `/Zotero-Jsa.dotm`
     if (!window.Application.FileSystem.Exists(dotmPath)) {
@@ -54,6 +54,7 @@ async function OnAddinLoad(ribbonUI) {
     Application.AddIns.Add(dotmPath, true)
     Application.AddIns.Item("Zotero-Jsa.dotm").Installed = true
     if (settingsJson.zoteroSwitch) {
+        const zoteroPathValue = settingsJson.zoteroPath[osInfo];
         runZotero(osInfo, zoteroPathValue);
     }
     if (settingsJson.citationPreview) {
