@@ -41,7 +41,7 @@ function OnAddinLoad(ribbonUI) {
     const osInfo = detectOS();
     console.log("系统信息：" + osInfo)
     let settingsJson = getSettingsJson(osInfo);
-    const zoteroPathValue = settingsJson.zoteroPath[osInfo];
+   
     console.log("配置文件" + settingsJson)
     runProxy(osInfo);
     if (osInfo == "macos") {
@@ -51,6 +51,7 @@ function OnAddinLoad(ribbonUI) {
         }
     }
     if (settingsJson.zoteroSwitch) {
+        const zoteroPathValue = settingsJson.zoteroPath[osInfo];
         runZotero(osInfo, zoteroPathValue);
     }
     if (settingsJson.citationPreview) {

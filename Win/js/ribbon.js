@@ -24,7 +24,7 @@ function zc_alert(msg) {
     const osInfo = detectOS();
     const tutorial = getAddonPath(osInfo)
     let settingsJson = getSettingsJson(osInfo);
-    const zoteroPathValue = settingsJson.zoteroPath[osInfo];
+   
 
     if (typeof (wps.Enum) !== "object") {
         wps.Enum = WPS_Enum;
@@ -55,6 +55,7 @@ function zc_alert(msg) {
         }
     }
     if (settingsJson.zoteroSwitch) {
+        const zoteroPathValue = settingsJson.zoteroPath[osInfo];
         runZotero(osInfo, zoteroPathValue);
     }
     if (settingsJson.citationPreview) {
