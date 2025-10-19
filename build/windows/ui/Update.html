@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统更新平台</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+
+        .main-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+        }
+
+        /* 标签页导航 */
+        .tab-nav {
+            display: flex;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: #007bff;
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #007bff;
+        }
+
+        .tab-button:not(.active):hover {
+            background-color: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 登录页面样式 */
+        .login-header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        #networkStatus {
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+            animation: fadeIn 0.5s;
+            margin-bottom: 15px;
+        }
+
+        .network-online {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .network-offline {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        #globalMessage {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 1.2rem;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-bottom: 1.2rem;
+        }
+
+        .login-button:hover:not(:disabled) {
+            background-color: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .login-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .secondary-links {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .secondary-links a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .secondary-links a:hover {
+            color: #5a67d8;
+            text-decoration: underline;
+        }
+
+        /* 更新页面样式 */
+        .loading-container,
+        .result-container {
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .loading-title,
+        .result-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .loading-desc,
+        .result-desc {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .large-spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 30px;
+            border: 4px solid rgba(0, 123, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #007bff;
+            animation: spin 1s linear infinite;
+        }
+
+        .result-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .success-icon {
+            color: #28a745;
+        }
+
+        .info-icon {
+            color: #17a2b8;
+        }
+
+        .version-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .version-info p {
+            margin: 8px 0;
+            color: #495057;
+        }
+
+        .highlight {
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: #007bff;
+            border: 1px solid #007bff;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* 记住我选项样式 */
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+        }
+
+
+        /* 进度遮罩层样式 */
+        .progress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .progress-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-modal h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 22px;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+
+        .progress-status {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .progress-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+
+        .install-note {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 15px;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                margin: 0 15px;
+            }
+
+            .tab-button {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .tab-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- 标签页导航 -->
+        <div class="tab-nav">
+            <button class="tab-button active" data-tab="login">登录</button>
+            <button class="tab-button" data-tab="update">更新</button>
+        </div>
+
+        <!-- 登录页面 -->
+        <div id="loginTab" class="tab-content active">
+            <div id="networkStatus"></div>
+
+            <div class="login-header">
+                <h1>欢迎回来</h1>
+                <p>请输入您的账号信息登录系统</p>
+            </div>
+
+            <div id="globalMessage"></div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">用户名</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名" required>
+                    <div id="usernameError" class="error-message">请输入有效的用户名</div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                    <div id="passwordError" class="error-message">密码不能为空</div>
+                </div>
+                <!-- 添加"记住我"选项 -->
+                <div class="remember-me">
+                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                    <label for="rememberMe">记住我</label>
+                </div>
+                <button type="submit" class="login-button" id="loginButton">
+                    <span id="buttonText">登录</span>
+                </button>
+
+                <div class="secondary-links">
+                    <a href="#" id="forgotPassword">忘记密码?</a>
+                    <a href="#" id="register">注册新账号</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- 更新页面 -->
+        <div id="updateTab" class="tab-content">
+            <!-- Loading 部分 -->
+            <div id="loadingSection" class="loading-container">
+                <div class="large-spinner"></div>
+                <h2 class="loading-title">正在检查更新</h2>
+                <p class="loading-desc">正在与应用服务器通信，检查是否有新版本可用...</p>
+            </div>
+
+            <!-- 结果部分 - 有新版本 -->
+            <div id="updateAvailableSection" class="result-container hidden">
+                <div class="result-icon">🔄</div>
+                <h2 class="result-title">发现新版本！</h2>
+                <p class="result-desc">当前应用有更新可用，请更新以获得最新功能和使用体验。</p>
+
+                <div class="version-info">
+                    <p><strong>版本信息</strong></p>
+                    <p>当前版本: <span id="currentVersion" class="highlight">-</span></p>
+                    <p>最新版本: <span id="latestVersion" class="highlight">-</span></p>
+                    <p>更新内容: <span id="releaseNotes">-</span></p>
+                </div>
+
+                <div class="button-group">
+                    <button id="updateNowBtn" class="btn-primary">立即更新</button>
+                    <button id="manualUpdateBtn" class="btn-outline">手动更新</button>
+                </div>
+            </div>
+
+            <!-- 结果部分 - 已是最新版本 -->
+            <div id="latestVersionSection" class="result-container hidden">
+                <div class="result-icon success-icon">✅</div>
+                <h2 class="result-title">已是最新版本</h2>
+                <p class="result-desc">你的应用当前已是最新版本，无需更新。</p>
+
+                <div class="version-info">
+                    <p><strong>版本信息</strong></p>
+                    <p>当前版本: <span id="currentVersionLatest" class="highlight">-</span></p>
+                    <p>检查时间: <span id="checkTime">-</span></p>
+                </div>
+
+                <button id="continueBtn" class="btn-success">继续使用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 下载进度遮罩层 -->
+    <div id="progressOverlay" class="progress-overlay hidden">
+        <div class="progress-modal">
+            <h3>更新下载中</h3>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progressPercentage">0%</span>
+                </div>
+            </div>
+            <div class="progress-status">
+                <span id="progressStatus">准备下载...</span>
+            </div>
+            <div class="progress-details">
+                <span id="downloadSpeed">速度: 0 KB/s</span>
+                <span id="downloadSize">已下载: 0 MB / 0 MB</span>
+            </div>
+            <button id="cancelDownloadBtn" class="btn-outline">取消下载</button>
+        </div>
+    </div>
+
+    <!-- 安装进度遮罩层 -->
+    <div id="installOverlay" class="progress-overlay hidden">
+        <div class="progress-modal">
+            <div class="result-icon info-icon">📦</div>
+            <h3>安装更新</h3>
+            <div class="progress-status">
+                <span id="installStatus">准备安装...</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="installProgressFill"></div>
+                </div>
+            </div>
+            <p class="install-note">安装完成后应用将自动重启</p>
+        </div>
+    </div>
+    <script type="text/javascript" src="../version.js"></script>
+    <script type="text/javascript" src="../js/JSA.js"></script>
+    <script type="text/javascript" src="../js/util.js"></script>
+    <script type="text/javascript" src="../js/wpsApp.js"></script>
+    <script>
+        // 页面加载时自动检查更新
+        document.addEventListener('DOMContentLoaded', function () {
+            const savedCredentials = getSavedCredentials();
+            if (savedCredentials) {
+                document.getElementById('username').value = savedCredentials.username;
+                document.getElementById('password').value = savedCredentials.password;
+                document.getElementById('rememberMe').checked = true;
+            }
+            // 检查用户是否已登录
+            const accessToken = localStorage.getItem('accessToken');
+
+            if (accessToken) {
+                // 用户已登录，切换到更新标签页并检查更新
+                 // 重置更新页面状态
+            
+                switchToUpdateTab();
+                simulateVersionCheck();
+            } else {
+                // 用户未登录，显示提示信息
+                showMessage(globalMessage, '请先登录以检查更新', 'message-info');
+            }
+        });
+
+        // 获取保存的凭证
+        function getSavedCredentials() {
+            const savedData = localStorage.getItem('systemUpdateCredentials');
+            if (!savedData) return null;
+
+            try {
+                return JSON.parse(savedData);
+            } catch (e) {
+                console.error('解析保存的凭证失败:', e);
+                return null;
+            }
+        }
+
+        // 保存凭证到本地存储
+        function saveCredentials(username, password) {
+            const credentials = {
+                username: username,
+                password: password,
+                timestamp: new Date().getTime()
+            };
+
+            localStorage.setItem('systemUpdateCredentials', JSON.stringify(credentials));
+        }
+
+        // 清除保存的凭证
+        function clearCredentials() {
+            localStorage.removeItem('systemUpdateCredentials');
+        }
+
+        // 登录表单提交处理
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            // 根据用户选择保存或清除凭证
+            if (rememberMe) {
+                saveCredentials(username, password);
+            } else {
+                clearCredentials();
+            }
+        });
+        // 标签页切换功能
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // 移除所有活动状态
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+ // 重置更新页面状态
+                resetUpdatePage();
+                simulateVersionCheck();
+                // 添加当前活动状态
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(`${tabId}Tab`).classList.add('active');
+            });
+        });
+
+        // 切换到更新标签页
+        function switchToUpdateTab() {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            tabButtons[1].classList.add('active');
+            tabContents[1].classList.add('active');
+        }
+        // 重置更新页面状态
+        function resetUpdatePage() {
+            loadingSection.classList.remove('hidden');
+            updateAvailableSection.classList.add('hidden');
+            latestVersionSection.classList.add('hidden');
+        }
+        // 登录部分代码
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        const loginButton = document.getElementById('loginButton');
+        const buttonText = document.getElementById('buttonText');
+        const networkStatus = document.getElementById('networkStatus');
+        const globalMessage = document.getElementById('globalMessage');
+
+        // API端点配置
+        const API_BASE = "http://www.chuxintool.xyz:3001";
+        const LOGIN_ENDPOINT = `${API_BASE}/auth/login`;
+
+        // 显示消息函数
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = '';
+            element.classList.add(type);
+            element.style.display = 'block';
+
+            if (element !== networkStatus) {
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // 1. 页面加载时检查网络状态
+        window.addEventListener('load', () => {
+            checkNetworkStatus();
+        });
+
+        // 2. 监听在线/离线事件
+        window.addEventListener('online', () => {
+            showMessage(networkStatus, '网络连接已恢复！您现在可以正常登录了。', 'network-online');
+        });
+
+        window.addEventListener('offline', () => {
+            showMessage(networkStatus, '网络连接已断开！请检查您的网络设置。', 'network-offline');
+            loginButton.disabled = true;
+            buttonText.textContent = '等待网络连接...';
+        });
+
+
+
+        function checkNetworkStatus() {
+            if (navigator.onLine) {
+                loginButton.disabled = false;
+                buttonText.textContent = '登录';
+            } else {
+                showMessage(networkStatus, '网络连接已断开！请检查您的网络设置。', 'network-offline');
+                loginButton.disabled = true;
+                buttonText.textContent = '等待网络连接...';
+            }
+        }
+
+        // 4. 表单提交处理
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            let isValid = true;
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            // 重置错误信息
+            usernameError.style.display = 'none';
+            passwordError.style.display = 'none';
+            globalMessage.style.display = 'none';
+
+            // 用户名验证
+            if (username === '') {
+                usernameError.textContent = '请输入有效的用户名';
+                usernameError.style.display = 'block';
+                isValid = false;
+            }
+
+            // 密码验证
+            if (password === '') {
+                passwordError.textContent = '密码不能为空';
+                passwordError.style.display = 'block';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            // 检查网络状态后再提交
+            if (!navigator.onLine) {
+                showMessage(globalMessage, '网络连接不可用，请检查网络后重试。', 'message-error');
+                return;
+            }
+
+            // 显示加载状态
+            loginButton.disabled = true;
+            buttonText.innerHTML = '<div class="spinner"></div> 登录中...';
+
+            try {
+                // 发送登录请求到后端API
+                const response = await fetch(LOGIN_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // 登录成功处理
+                    showMessage(globalMessage, '登录成功！正在切换到更新页面...', 'message-success');
+
+                    // 存储认证信息
+                    localStorage.setItem('accessToken', data.accessToken);
+                    localStorage.setItem('refreshToken', data.refreshToken);
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+
+                    // 切换到更新标签页
+                    setTimeout(() => {
+                        tabButtons[0].classList.remove('active');
+                        tabButtons[1].classList.add('active');
+                        tabContents[0].classList.remove('active');
+                        tabContents[1].classList.add('active');
+
+                        // 开始检查更新
+                        simulateVersionCheck();
+                    }, 1500);
+                } else {
+                    // 登录失败处理
+                    loginButton.disabled = false;
+                    buttonText.textContent = '登录';
+
+                    // 显示具体的错误信息
+                    let errorMessage = data.error || '登录失败，请重试';
+                    showMessage(globalMessage, errorMessage, 'message-error');
+                }
+            } catch (error) {
+                // 网络错误处理
+                loginButton.disabled = false;
+                buttonText.textContent = '登录';
+
+                let errorMessage = '网络错误，请检查连接后重试';
+                if (error.name === 'AbortError') {
+                    errorMessage = '请求超时，请重试';
+                }
+
+                showMessage(globalMessage, errorMessage, 'message-error');
+            }
+        });
+
+        // 忘记密码和注册链接点击事件
+        document.getElementById('forgotPassword').addEventListener('click', function (e) {
+            e.preventDefault();
+            showMessage(globalMessage, '忘记密码功能：请联系管理员qq:897081475重置密码。', 'message-info');
+        });
+
+        document.getElementById('register').addEventListener('click', function (e) {
+            e.preventDefault();
+            showMessage(globalMessage, '注册功能：请联系管理员qq:897081475创建新账号。', 'message-info');
+        });
+
+        // 更新检查部分代码
+        let updateInfo = {};
+        let xhr = null;
+        let downloadStartTime;
+        let lastLoaded = 0;
+        let progressUpdateInterval;
+
+        // 页面元素
+        const loadingSection = document.getElementById('loadingSection');
+        const updateAvailableSection = document.getElementById('updateAvailableSection');
+        const latestVersionSection = document.getElementById('latestVersionSection');
+        const progressOverlay = document.getElementById('progressOverlay');
+        const installOverlay = document.getElementById('installOverlay');
+
+        // 模拟版本检查函数
+        async function simulateVersionCheck() {
+            // 在发起请求前，先检查网络状态
+            if (!navigator.onLine) {
+                showNetworkError("网络连接已断开，请检查您的网络设置后再试。");
+                loadingSection.classList.add('hidden');
+                return;
+            }
+
+            try {
+                console.log('正在检查更新...');
+                const url = `${API_BASE}/check-update?currentVersion=${VERSION}`;
+
+                // 获取存储的访问令牌
+                const accessToken = localStorage.getItem('accessToken');
+                if (!accessToken) {
+                    showNetworkError("未找到访问令牌，请先登录系统");
+                    return;
+                }
+
+                // 建议添加超时控制
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+
+                const response = await fetch(url, {
+                    signal: controller.signal,
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+
+                clearTimeout(timeoutId); // 清除超时计时器
+
+                // 检查HTTP状态码
+                if (!response.ok) {
+                    // 可以根据不同的状态码给出更精细的提示
+                    if (response.status === 401) {
+                        // 令牌过期或无效
+                        showNetworkError("身份验证已过期，请重新登录");
+                        return;
+                    }
+
+                    const errorMessage = `服务器错误 (${response.status})`;
+                    throw new Error(errorMessage);
+                }
+
+                const data = await response.json();
+                updateInfo = data
+                console.log(updateInfo)
+                if (data.updateAvailable) {
+                    console.log(`发现新版本: ${data.latestVersion}`);
+
+                    showUpdateAvailable({
+                        currentVersion: `${VERSION}`,
+                        latestVersion: data.latestVersion,
+                        releaseNotes: data.releaseNotes,
+                        downloadUrl: data.downloadUrl
+                    });
+                } else {
+                    console.log('当前已是最新版本');
+                    showLatestVersion({
+                        currentVersion: `${VERSION}`,
+                        checkTime: new Date().toLocaleString('zh-CN')
+                    });
+                }
+            } catch (error) {
+                console.error('检查更新失败: ', error);
+                // 关键步骤：无论何种错误，先隐藏更新检查界面
+                loadingSection.classList.add('hidden'); // 添加这行
+                let userFacingMessage = '检查更新失败，请稍后重试。'; // 默认提示
+
+                // 根据错误类型细化提示信息
+                if (error.name === 'AbortError') {
+                    userFacingMessage = '请求超时，请检查网络连接后再试。';
+                } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    userFacingMessage = '网络连接失败，请检查网络是否畅通，或服务器是否可访问。';
+                } else if (error.message.includes('服务器错误')) {
+                    userFacingMessage = `服务器暂时出现问题（${error.message}），请稍后再试。`;
+                }
+
+                // 调用一个更友好的UI提示函数，并提供重试选项
+                showNetworkError(userFacingMessage, () => {
+                    simulateVersionCheck();
+                });
+            }
+        }
+
+        // 显示友好错误提示
+        function showNetworkError(message, onRetry) {
+            const errorBar = document.createElement('div');
+            errorBar.style.cssText = 'background-color: #fee; border: 1px solid #fcc; padding: 10px; text-align: center;';
+            errorBar.innerHTML = `
+                <span>${message}</span>
+                ${onRetry ? '<button style="margin-left: 10px;" id="retryButton">重试</button>' : ''}
+                <button style="margin-left: 5px;" id="closeErrorButton">关闭</button>
+            `;
+            document.body.prepend(errorBar);
+            // 隐藏主容器
+            document.querySelector('.main-container').style.display = 'none';
+
+            if (onRetry) {
+                document.getElementById('retryButton').addEventListener('click', function () {
+                    document.querySelector('.main-container').style.display = 'block';
+
+                    errorBar.remove();
+                    loadingSection.classList.remove('hidden');
+                    onRetry();
+                });
+            }
+
+            document.getElementById('closeErrorButton').addEventListener('click', function () {
+                errorBar.remove();
+                // 显示主容器
+                document.querySelector('.main-container').style.display = 'block';
+
+                // 切换到登录标签页
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                tabButtons[0].classList.add('active');
+                tabContents[0].classList.add('active');
+            });
+        }
+
+        // 显示更新可用界面
+        function showUpdateAvailable(versionInfo) {
+            loadingSection.classList.add('hidden');
+
+            document.getElementById('currentVersion').textContent = versionInfo.currentVersion;
+            document.getElementById('latestVersion').textContent = versionInfo.latestVersion;
+            document.getElementById('releaseNotes').textContent = versionInfo.releaseNotes;
+
+            updateAvailableSection.classList.remove('hidden');
+        }
+
+        // 显示已是最新版本界面
+        function showLatestVersion(versionInfo) {
+            loadingSection.classList.add('hidden');
+
+            document.getElementById('currentVersionLatest').textContent = versionInfo.currentVersion;
+            document.getElementById('checkTime').textContent = versionInfo.checkTime;
+
+            latestVersionSection.classList.remove('hidden');
+        }
+
+        // 显示进度遮罩层
+        function showProgressOverlay() {
+            progressOverlay.classList.remove('hidden');
+            updateProgress(0, '准备下载...');
+            document.getElementById('downloadSpeed').textContent = '速度: 0 KB/s';
+            document.getElementById('downloadSize').textContent = '已下载: 0 MB / 0 MB';
+        }
+
+        // 隐藏进度遮罩层
+        function hideProgressOverlay() {
+            progressOverlay.classList.add('hidden');
+            if (progressUpdateInterval) {
+                clearInterval(progressUpdateInterval);
+            }
+        }
+
+        // 显示安装遮罩层
+        function showInstallOverlay() {
+            installOverlay.classList.remove('hidden');
+        }
+
+        // 隐藏安装遮罩层
+        function hideInstallOverlay() {
+            installOverlay.classList.add('hidden');
+        }
+
+        // 更新进度显示
+        function updateProgress(percent, status) {
+            const progressFill = document.getElementById('progressFill');
+            const progressPercentage = document.getElementById('progressPercentage');
+            const progressStatus = document.getElementById('progressStatus');
+
+            progressFill.style.width = percent + '%';
+            progressPercentage.textContent = percent.toFixed(1) + '%';
+            progressStatus.textContent = status || '下载中...';
+        }
+
+        // 更新下载详情（速度、大小）
+        function updateDownloadDetails(loaded, total) {
+            const downloadSize = document.getElementById('downloadSize');
+            const downloadSpeed = document.getElementById('downloadSpeed');
+
+            const now = Date.now();
+            const elapsedTime = (now - downloadStartTime) / 1000;
+            const downloadedBytes = loaded - lastLoaded;
+            const speed = elapsedTime > 0 ? downloadedBytes / elapsedTime : 0;
+
+            const loadedMB = (loaded / (1024 * 1024)).toFixed(2);
+            const totalMB = (total / (1024 * 1024)).toFixed(2);
+            const speedKB = (speed / 1024).toFixed(1);
+
+            downloadSize.textContent = `已下载: ${loadedMB} MB / ${totalMB} MB`;
+            downloadSpeed.textContent = `速度: ${speedKB} KB/s`;
+
+            lastLoaded = loaded;
+        }
+
+        // 更新安装进度
+        function updateInstallProgress(percent, status) {
+            const installProgressFill = document.getElementById('installProgressFill');
+            const installStatus = document.getElementById('installStatus');
+
+            installProgressFill.style.width = percent + '%';
+            installStatus.textContent = status || '安装中...';
+        }
+
+        // 立即更新
+        async function updateNow() {
+            try {
+                // 显示进度遮罩层
+                showProgressOverlay();
+
+                console.log('开始下载更新包...');
+                const downloadUrl = `${API_BASE}${updateInfo.downloadUrl}`;
+
+                // 获取存储的访问令牌
+                const accessToken = localStorage.getItem('accessToken');
+                if (!accessToken) {
+                    throw new Error('未找到访问令牌，请先登录系统');
+                }
+
+                // 使用XMLHttpRequest以便获取下载进度
+                xhr = new XMLHttpRequest();
+                xhr.open('GET', downloadUrl, true);
+                xhr.responseType = 'blob';
+
+                // 添加Authorization头
+                xhr.setRequestHeader('Authorization', `Bearer ${accessToken}`);
+
+                // 初始化下载跟踪
+                downloadStartTime = Date.now();
+                lastLoaded = 0;
+
+                // 设置定期更新进度（每秒更新一次速度信息）
+                progressUpdateInterval = setInterval(() => {
+                    if (xhr && xhr.status === 200) {
+                        updateDownloadDetails(lastLoaded, xhr.total);
+                    }
+                }, 1000);
+
+                // 监听进度事件
+                xhr.onprogress = function (event) {
+                    if (event.lengthComputable) {
+                        const percent = (event.loaded / event.total) * 100;
+                        updateProgress(percent, '下载中...');
+                        updateDownloadDetails(event.loaded, event.total);
+                    }
+                };
+
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        // 下载完成，清除定时器
+                        if (progressUpdateInterval) {
+                            clearInterval(progressUpdateInterval);
+                        }
+
+                        updateProgress(100, '下载完成，正在验证...');
+
+                        // 处理下载的文件
+                        processDownloadedFile(xhr.response);
+                    } else {
+                        hideProgressOverlay();
+                        alert('下载失败: ' + xhr.statusText);
+                    }
+                };
+
+                xhr.onerror = function () {
+                    hideProgressOverlay();
+                    alert('下载过程中发生错误');
+                };
+
+                xhr.send();
+
+            } catch (error) {
+                console.log('下载更新失败: ' + error.message);
+                hideProgressOverlay();
+                alert('下载失败: ' + error.message);
+            }
+        }
+        // 处理下载的文件
+        async function processDownloadedFile(blobData) {
+            try {
+                // 验证文件完整性
+                const arrayBuffer = await blobData.arrayBuffer();
+                const hashArrayBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+                const hashArray = Array.from(new Uint8Array(hashArrayBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                console.log(hashHex + "服务器哈希" + updateInfo.fileHash)
+                if (hashHex !== updateInfo.fileHash) {
+                    updateProgress(0, '文件验证失败');
+                    setTimeout(() => {
+                        hideProgressOverlay();
+                        alert('文件不完整，请重新下载！');
+                    }, 100);
+                    return;
+                }
+                const tmpFile = window.Application.Env.GetTempPath() + "/zoteroUpdate.tar.gz"
+                if (window.Application.FileSystem.Exists(tmpFile)) {
+                    window.Application.FileSystem.Remove(tmpFile)
+                }
+                const binaryString = await blobToBinaryString(blobData);
+
+                await wps.FileSystem.writeAsBinaryString(tmpFile, binaryString);
+                // 隐藏下载进度，显示安装进度
+                hideProgressOverlay();
+                showInstallOverlay();
+                const osInfo = detectOS();
+                const tutorial = getAddonPath(osInfo)
+                const jsaddonsPath = getJsaddonsPath(osInfo)
+                // 模拟安装过程
+                await simulateInstallation(tmpFile, jsaddonsPath);
+
+            } catch (error) {
+                console.log('文件处理失败: ' + error.message);
+                hideProgressOverlay();
+                alert('文件处理失败: ' + error.message);
+            }
+        }
+
+
+        // 模拟安装过程
+        async function simulateInstallation(tmpFile, jsaddonsPath) {
+            // 模拟安装进度更新
+            updateInstallProgress(10, '准备安装文件...');
+
+
+            if (!window.Application.FileSystem.Exists(tmpFile)) {
+                alert("文件缺失，请重新更新！")
+                return
+            }
+            updateInstallProgress(50, '备份当前版本...');
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            const funZipStr = `Shell('cmd.exe /c "cd  ${jsaddonsPath} && tar -czvf zoteroBack.tar.gz -C wps-zotero_1.0.0 ."', jsHide)`
+            runFun('zipFile', funZipStr)
+
+            updateInstallProgress(30, '解压更新包...');
+            await new Promise(resolve => setTimeout(resolve, 100));
+            const funTarStr = `Shell('cmd.exe /c " tar -xf ${tmpFile} -C ${jsaddonsPath}/wps-zotero_1.0.0 "', jsHide)`
+            runFun('tarFile', funTarStr)
+
+            updateInstallProgress(80, '安装新文件...');
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            updateInstallProgress(100, '完成安装...');
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            // 完成安装
+            document.getElementById('installStatus').textContent = '安装成功！';
+
+            // 2秒后隐藏安装遮罩层
+            setTimeout(() => {
+                hideInstallOverlay();
+                alert('更新已成功安装！插件将在重启后完成更新。');
+                window.close()
+            }, 100);
+        }
+
+        // 取消下载
+        function cancelDownload() {
+            if (xhr) {
+                xhr.abort();
+            }
+            hideProgressOverlay();
+            alert('下载已取消');
+        }
+        // 显示手动更新说明
+        async function showManualUpdateInstructions() {
+
+            try {
+                // 构造完整下载地址
+                const downloadUrl = `${API_BASE}${updateInfo.downloadUrl}`;
+
+                // 1. 获取文件数据
+                const response = await fetch(downloadUrl);
+                if (!response.ok) throw new Error(`下载失败: ${response.status}`);
+
+                // 2. 生成Blob对象
+                const fileBlob = await response.blob();
+
+                // 3. 调用下载方法
+                saveBlobToTempFile(fileBlob, "zotero-update.tar.gz"); // 添加文件扩展名
+
+            } catch (error) {
+                console.error("更新文件下载失败:", error);
+                alert("下载失败，请检查网络连接");
+            }
+        }
+        async function saveBlobToTempFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+
+            // 添加清理代码
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url); // 释放内存
+            }, 100);
+        }
+        // 继续使用
+        function continueUsing() {
+            window.close()
+        }
+
+        function blobToBinaryString(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = event => {
+                    resolve(event.target.result);
+                };
+                reader.onerror = error => {
+                    reject(error);
+                };
+                reader.readAsBinaryString(blob);
+            });
+        }
+
+
+        // 辅助函数
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // 按钮事件监听
+        document.getElementById('updateNowBtn').addEventListener('click', updateNow);
+        document.getElementById('manualUpdateBtn').addEventListener('click', showManualUpdateInstructions);
+        document.getElementById('continueBtn').addEventListener('click', continueUsing);
+        document.getElementById('cancelDownloadBtn').addEventListener('click', cancelDownload);
+    </script>
+</body>
+
+</html>
