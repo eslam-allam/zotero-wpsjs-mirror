@@ -42,15 +42,15 @@ async function OnAddinLoad(ribbonUI) {
     //console.log("系统信息：" + osInfo)
     let settingsJson = getSettingsJson(osInfo);
 
-    const addonpath=getAddonPath(osInfo)
-   
+    const addonpath = getAddonPath(osInfo)
+
     //console.log("配置文件" + settingsJson)
-     const dotmPath = addonpath + `/Zotero-Jsa.dotm`
+    const dotmPath = addonpath + `/Zotero-Jsa.dotm`
     if (!window.Application.FileSystem.Exists(dotmPath)) {
         alert("Zotero-wps核心文件丢失，请卸载插件，重新安装！！")
 
     }
-   
+
     Application.AddIns.Add(dotmPath, true)
     Application.AddIns.Item("Zotero-Jsa.dotm").Installed = true
     if (settingsJson.zoteroSwitch) {
@@ -101,7 +101,7 @@ async function OnAddinLoad(ribbonUI) {
 
     }
 
-   
+
 
 
     return true;
@@ -116,7 +116,7 @@ function OnAction(control) {
         case "btnAddEditCitation":
 
             Application.Run("btnEditCitation")
-
+            checkAndRunZotero()//给予zotero焦点
             break;
         case "btnAddEditBib":
             Application.Run("btnEditBibliography")
