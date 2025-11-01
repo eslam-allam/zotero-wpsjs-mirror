@@ -114,9 +114,9 @@ function OnAction(control) {
     const eleId = control.Id
     switch (eleId) {
         case "btnAddEditCitation":
-
-            Application.Run("btnEditCitation")
             checkAndRunZotero()//给予zotero焦点
+            Application.Run("btnEditCitation")
+
             break;
         case "btnAddEditBib":
             Application.Run("btnEditBibliography")
