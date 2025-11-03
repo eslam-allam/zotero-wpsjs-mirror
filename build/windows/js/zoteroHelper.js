@@ -44,7 +44,12 @@ function runZotero(osInfo,zoteroPath) {
         runServers("runZotero", 'open '+zoteroPathValue,'jsMaximizedFocus');
         return;
     } 
+    if (osInfo == "windows") {
+        runServers("runZotero", zoteroPathValue.replace(/\\/g, '/')+'', 'jsMaximizedFocus');
+        return;
+    } else {
         runServers("runZotero", zoteroPathValue+'', 'jsMaximizedFocus');
+    }
      
    return; 
 
