@@ -20,7 +20,7 @@ function zc_alert(msg) {
 /**
  * Callback for plugin loading.
 **/
-async function OnAddinLoad(ribbonUI) {
+ function OnAddinLoad(ribbonUI) {
     if (typeof (wps.Enum) !== "object") {
         wps.Enum = WPS_Enum;
         zc_alert('You are using an old version of WPS, this plugin might not work properly!');
