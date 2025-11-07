@@ -39,7 +39,7 @@ async function onbuttonclick(idStr) {
 
 
                     window.Application.ActiveDocument.Saved = true
-                    await postRequestXHRAsync('http://127.0.0.1:21931/stopproxy', null)
+                  
 
                     runServers("uninstallZoteroAddin", wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/winUninstall.exe', 'jsMaximizedFocus');
                     const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
@@ -53,7 +53,7 @@ async function onbuttonclick(idStr) {
                 } else if (osInfo == "macos") {
                     window.Application.ActiveDocument.Save()
 
-                    await postRequestXHRAsync('http://127.0.0.1:21931/stopproxy', null)
+                
                     runServers("uninstallZoteroAdd", 'open ' + wps.Env.GetHomePath() + '/.kingsoft/wps/jsaddons/macUninstall.app', 'jsMaximizedFocus');
                     const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
                     if (window.Application.FileSystem.Exists(tmpJson)) {
