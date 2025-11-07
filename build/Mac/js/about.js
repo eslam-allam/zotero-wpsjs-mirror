@@ -38,7 +38,7 @@ async function onbuttonclick(idStr) {
                     window.Application.ActiveDocument.Save()
 
 
-                    window.Application.ActiveDocument.Saved = true
+                  
                   
 
                     runServers("uninstallZoteroAddin", wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/winUninstall.exe', 'jsMaximizedFocus');
