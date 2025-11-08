@@ -15,10 +15,10 @@ async function onbuttonclick(idStr) {
             }
             const osInfo = detectOS();
             const tutorial = getAddonPath(osInfo)
-            const jsaddonsPath=getJsaddonsPath(osInfo)
+            const jsaddonsPath = getJsaddonsPath(osInfo)
             const backFile = jsaddonsPath + "/zoteroBack.tar.gz"
             if (window.Application.FileSystem.Exists(backFile)) {
-                  const funBackStr = `Shell('cmd.exe /c " tar -xf ${backFile} -C ${jsaddonsPath}/wps-zotero_1.0.0 "', jsHide)`
+                const funBackStr = `Shell('cmd.exe /c " tar -xf ${backFile} -C ${jsaddonsPath}/wps-zotero_1.0.0 "', jsHide)`
                 runFun('backFile', funBackStr)
                 alert("版本回退成功！")
                 return
@@ -38,8 +38,8 @@ async function onbuttonclick(idStr) {
                     window.Application.ActiveDocument.Save()
 
 
-                  
-                  
+
+
 
                     runServers("uninstallZoteroAddin", wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/winUninstall.exe', 'jsMaximizedFocus');
                     const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
@@ -52,9 +52,14 @@ async function onbuttonclick(idStr) {
                     return;
                 } else if (osInfo == "macos") {
                     window.Application.ActiveDocument.Save()
+                    const uninstallPath = wps.Env.GetHomePath() + '/.kingsoft/wps/jsaddons/macUninstall.app';
+                    if (window.Application.FileSystem.Exists(uninstallPath)) {
+                        runServers("uninstallZoteroAdd", 'open ' + uninstallPath, 'jsMaximizedFocus');
+                    } else {
+                        runServers("uninstallZoteroAdd", 'rm -r ' + wps.Env.GetHomePath() + '/.kingsoft/wps/jsaddons/Zotero-Jsa_1.0.0', 'jsMaximizedFocus');
+                    }
 
-                
-                    runServers("uninstallZoteroAdd", 'open ' + wps.Env.GetHomePath() + '/.kingsoft/wps/jsaddons/macUninstall.app', 'jsMaximizedFocus');
+
                     const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
                     if (window.Application.FileSystem.Exists(tmpJson)) {
                         window.Application.FileSystem.Remove(tmpJson)
