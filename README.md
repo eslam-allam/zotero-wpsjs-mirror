@@ -30,7 +30,9 @@ Zotero-WPSJS文字加载项，一款**学术论文管理软件Zotero** 和**WPS�
 Zotero相关使用教程https://zotero-chinese.com/user-guide/
 #### 安装教程
 
-视频教程[B站视频](https://b23.tv/tvqvX9g)
+[在线安装](www.chuxintool.xyz:3000/win/publish.html)
+
+离线安装[B站视频](https://b23.tv/tvqvX9g)
 
 
 
