@@ -20,7 +20,7 @@ function zc_alert(msg) {
 /**
  * Callback for plugin loading.
 **/
- function OnAddinLoad(ribbonUI) {
+function OnAddinLoad(ribbonUI) {
     if (typeof (wps.Enum) !== "object") {
         wps.Enum = WPS_Enum;
         zc_alert('You are using an old version of WPS, this plugin might not work properly!');
@@ -101,52 +101,73 @@ function zc_alert(msg) {
 
     }
 
+    //文档关闭检测
+    wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
 
+      if(  window.Application.PluginStorage.getItem("btnClick")){
+        alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
+        window.Application.ApiEvent.Cancel=true
+      }
+
+
+    });
 
 
     return true;
+}
+/**
+ * Callback for button clicking events.
+ */
+function OnAction(control) {
+    const actionMap = {
+        "btnAddEditCitation": () => executeWithLock(() => {
+            checkAndRunZotero();
+            Application.Run("btnEditCitation");
+        }),
+        "btnAddEditBib": () => executeWithLock(() => Application.Run("btnEditBibliography")),
+        "btnRefresh": () => executeWithLock(() => Application.Run("btnRefresh")),
+        "btnPref": () => executeWithLock(() => Application.Run("btnSetDocPrefs")),
+        "btnCitationHyperlinks": () => executeWithLock(() => bindCitationsToBookmarks()),
+        "btnUnlink": () => executeWithLock(() => Application.Run("btnUnlink")),
+        "btnAddNote": () => executeWithLock(() => Application.Run("btnInsertNote")),
+        "btnDonate": () => {
+            window.Application.ShowDialog(
+                GetUrlPath() + "/ui/Donate.html", 
+                "捐赠", 
+                700 * window.devicePixelRatio, 
+                640 * window.devicePixelRatio, 
+                true, 
+                true
+            );
+        }
+    };
+
+    const action = actionMap[control.Id];
+    if (action) {
+        action();
+        return true;
+    }
+    
+    return false;
 }
 
 /**
- * Callback for button clicking events.
-**/
-function OnAction(control) {
-    const eleId = control.Id
-    switch (eleId) {
-        case "btnAddEditCitation":
-            checkAndRunZotero()//给予zotero焦点
-            Application.Run("btnEditCitation")
-
-            break;
-        case "btnAddEditBib":
-            Application.Run("btnEditBibliography")
-            break;
-        case "btnRefresh":
-            Application.Run("btnRefresh")
-            break;
-        case "btnPref":
-            Application.Run("btnSetDocPrefs")
-            break;
-        case "btnCitationHyperlinks":
-            //checkAndRunZotero()//给予zotero焦点
-            bindCitationsToBookmarks()
-            break;
-        case "btnUnlink":
-            Application.Run("btnUnlink")
-            break;
-        case "btnAddNote":
-            Application.Run("btnInsertNote")
-            break;
-        case "btnDonate":
-            {
-                window.Application.ShowDialog(GetUrlPath() + "/ui/Donate.html", "捐赠", 700 * window.devicePixelRatio, 640 * window.devicePixelRatio, true, true)
-            }
-            break;
-
-        default:
+ * 使用锁机制执行操作，防止重复点击
+ */
+function executeWithLock(operation) {
+    if (window.Application.PluginStorage.getItem("btnClick")) {
+        alert("正在操作zotero，请点击zotero完成操作！！");
+        return;
     }
-    return true;
+    
+    try {
+        window.Application.PluginStorage.setItem("btnClick", true);
+        operation();
+    } finally {
+        window.Application.PluginStorage.setItem("btnClick", false);
+    }
 }
+
 
 function GetImage(control) {
     const eleId = control.Id
@@ -235,10 +256,10 @@ function SettingsOnAction(selectedId) {
     const eleId = selectedId.Id
     switch (eleId) {
         case "btnAbout":
-            window.Application.ShowDialog(GetUrlPath() + "/ui/About.html", "关于", 600 * window.devicePixelRatio, 480 * window.devicePixelRatio, false, true)
+            window.Application.ShowDialog(GetUrlPath() + "/ui/About.html", "关于", 600 * window.devicePixelRatio, 480 * window.devicePixelRatio, true, true)
             break;
         case "btnZoteroSet":
-            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, false, true)
+            window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, true, true)
             break;
 
 

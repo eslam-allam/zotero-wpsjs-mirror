@@ -101,51 +101,71 @@ function zc_alert(msg) {
 
     }
 
-   
+     //文档关闭检测
+    wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
+
+      if(  window.Application.PluginStorage.getItem("btnClick")){
+        alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
+        window.Application.ApiEvent.Cancel=true
+      }
+
+
+    });
 
 
     return true;
 }
-
 /**
  * Callback for button clicking events.
-**/
+ */
 function OnAction(control) {
-    const eleId = control.Id
-    switch (eleId) {
-        case "btnAddEditCitation":
+    const actionMap = {
+        "btnAddEditCitation": () => executeWithLock(() => {
+            checkAndRunZotero();
+            Application.Run("btnEditCitation");
+        }),
+        "btnAddEditBib": () => executeWithLock(() => Application.Run("btnEditBibliography")),
+        "btnRefresh": () => executeWithLock(() => Application.Run("btnRefresh")),
+        "btnPref": () => executeWithLock(() => Application.Run("btnSetDocPrefs")),
+        "btnCitationHyperlinks": () => executeWithLock(() => bindCitationsToBookmarks()),
+        "btnUnlink": () => executeWithLock(() => Application.Run("btnUnlink")),
+        "btnAddNote": () => executeWithLock(() => Application.Run("btnInsertNote")),
+        "btnDonate": () => {
+            window.Application.ShowDialog(
+                GetUrlPath() + "/ui/Donate.html", 
+                "捐赠", 
+                700 * window.devicePixelRatio, 
+                640 * window.devicePixelRatio, 
+                true, 
+                true
+            );
+        }
+    };
 
-            Application.Run("btnEditCitation")
-
-            break;
-        case "btnAddEditBib":
-            Application.Run("btnEditBibliography")
-            break;
-        case "btnRefresh":
-            Application.Run("btnRefresh")
-            break;
-        case "btnPref":
-            Application.Run("btnSetDocPrefs")
-            break;
-        case "btnCitationHyperlinks":
-            //checkAndRunZotero()//给予zotero焦点
-            bindCitationsToBookmarks()
-            break;
-        case "btnUnlink":
-            Application.Run("btnUnlink")
-            break;
-        case "btnAddNote":
-            Application.Run("btnInsertNote")
-            break;
-        case "btnDonate":
-            {
-                window.Application.ShowDialog(GetUrlPath() + "/ui/Donate.html", "捐赠", 700 * window.devicePixelRatio, 640 * window.devicePixelRatio, true, true)
-            }
-            break;
-
-        default:
+    const action = actionMap[control.Id];
+    if (action) {
+        action();
+        return true;
     }
-    return true;
+    
+    return false;
+}
+
+/**
+ * 使用锁机制执行操作，防止重复点击
+ */
+function executeWithLock(operation) {
+    if (window.Application.PluginStorage.getItem("btnClick")) {
+        alert("正在操作zotero，请点击zotero完成操作！！");
+        return;
+    }
+    
+    try {
+        window.Application.PluginStorage.setItem("btnClick", true);
+        operation();
+    } finally {
+        window.Application.PluginStorage.setItem("btnClick", false);
+    }
 }
 
 function GetImage(control) {

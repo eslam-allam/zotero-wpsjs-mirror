@@ -42,15 +42,15 @@ function OnAddinLoad(ribbonUI) {
     //console.log("系统信息：" + osInfo)
     let settingsJson = getSettingsJson(osInfo);
 
-    const addonpath=getAddonPath(osInfo)
-   
+    const addonpath = getAddonPath(osInfo)
+
     //console.log("配置文件" + settingsJson)
-     const dotmPath = addonpath + `/Zotero-Jsa.dotm`
+    const dotmPath = addonpath + `/Zotero-Jsa.dotm`
     if (!window.Application.FileSystem.Exists(dotmPath)) {
         alert("Zotero-wps核心文件丢失，请卸载插件，重新安装！！")
 
     }
-   
+
     Application.AddIns.Add(dotmPath, true)
     Application.AddIns.Item("Zotero-Jsa.dotm").Installed = true
     if (settingsJson.zoteroSwitch) {
@@ -101,57 +101,70 @@ function OnAddinLoad(ribbonUI) {
 
     }
 
-    // Exit the proxy server when the application quits.
-    wps.ApiEvent.AddApiEventListener("ApplicationQuit", () => {
+    //文档关闭检测
+    wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
 
-        postRequestXHR('http://127.0.0.1:21931/stopproxy', null);
+        if (window.Application.PluginStorage.getItem("btnClick")) {
+            alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
+            window.Application.ApiEvent.Cancel = true
+        }
 
 
     });
 
-
     return true;
+}
+/**
+ * Callback for button clicking events.
+ */
+function OnAction(control) {
+    const actionMap = {
+        "btnAddEditCitation": () => executeWithLock(() => {
+            checkAndRunZotero();
+            Application.Run("btnEditCitation");
+        }),
+        "btnAddEditBib": () => executeWithLock(() => Application.Run("btnEditBibliography")),
+        "btnRefresh": () => executeWithLock(() => Application.Run("btnRefresh")),
+        "btnPref": () => executeWithLock(() => Application.Run("btnSetDocPrefs")),
+        "btnCitationHyperlinks": () => executeWithLock(() => bindCitationsToBookmarks()),
+        "btnUnlink": () => executeWithLock(() => Application.Run("btnUnlink")),
+        "btnAddNote": () => executeWithLock(() => Application.Run("btnInsertNote")),
+        "btnDonate": () => {
+            window.Application.ShowDialog(
+                GetUrlPath() + "/ui/Donate.html",
+                "捐赠",
+                700 * window.devicePixelRatio,
+                640 * window.devicePixelRatio,
+                true,
+                true
+            );
+        }
+    };
+
+    const action = actionMap[control.Id];
+    if (action) {
+        action();
+        return true;
+    }
+
+    return false;
 }
 
 /**
- * Callback for button clicking events.
-**/
-function OnAction(control) {
-    const eleId = control.Id
-    switch (eleId) {
-        case "btnAddEditCitation":
-
-            Application.Run("btnEditCitation")
-
-            break;
-        case "btnAddEditBib":
-            Application.Run("btnEditBibliography")
-            break;
-        case "btnRefresh":
-            Application.Run("btnRefresh")
-            break;
-        case "btnPref":
-            Application.Run("btnSetDocPrefs")
-            break;
-        case "btnCitationHyperlinks":
-            //checkAndRunZotero()//给予zotero焦点
-            bindCitationsToBookmarks()
-            break;
-        case "btnUnlink":
-            Application.Run("btnUnlink")
-            break;
-        case "btnAddNote":
-            Application.Run("btnInsertNote")
-            break;
-        case "btnDonate":
-            {
-                window.Application.ShowDialog(GetUrlPath() + "/ui/Donate.html", "捐赠", 700 * window.devicePixelRatio, 640 * window.devicePixelRatio, true, true)
-            }
-            break;
-
-        default:
+ * 使用锁机制执行操作，防止重复点击
+ */
+function executeWithLock(operation) {
+    if (window.Application.PluginStorage.getItem("btnClick")) {
+        alert("正在操作zotero，请点击zotero完成操作！！");
+        return;
     }
-    return true;
+
+    try {
+        window.Application.PluginStorage.setItem("btnClick", true);
+        operation();
+    } finally {
+        window.Application.PluginStorage.setItem("btnClick", false);
+    }
 }
 
 function GetImage(control) {
