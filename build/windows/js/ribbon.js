@@ -190,6 +190,8 @@ function GetImage(control) {
             return "images/Donate.png";
         case "btnAbout":
             return "images/about.png";
+            case "btnHelp":
+            return "images/help.png";
         case "btnZoteroSet":
             return "images/zoteroSet.png";
         case "menu1":
@@ -262,7 +264,9 @@ function SettingsOnAction(selectedId) {
             window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, true, true)
             break;
 
-
+  case "btnHelp":
+            window.Application.ShowDialog(GetUrlPath() + "/ui/Help.html", "帮助", 800 * window.devicePixelRatio, 650 * window.devicePixelRatio, true, true)
+            break;
         default:
     }
     return true;

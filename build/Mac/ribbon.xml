@@ -35,6 +35,7 @@
                       <button id="btnZoteroSet" label="Zotero-Set" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />   
                 </menu>
                       <button id="btnAbout" label="About" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />
+                    <button id="btnHelp" label="Help" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />
                 </group>
             </tab>
         </tabs>

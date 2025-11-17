@@ -259,7 +259,9 @@ function SettingsOnAction(selectedId) {
         case "btnZoteroSet":
             window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, false, true)
             break;
-
+        case "btnHelp":
+            window.Application.ShowDialog(GetUrlPath() + "/ui/Help.html", "帮助", 800 * window.devicePixelRatio, 650 * window.devicePixelRatio, true, true)
+            break;
 
         default:
     }

@@ -15,7 +15,7 @@
                     
                  </group>
                   
-                <group id="AiList" >
+                <group id="AiList">
                   <separator/>
                 <menu id="menu1" label="AiTools"  getImage="GetImage" visible="true"  showItemImage="true" size="large">
                      <button id="yuanbaoItem" label="腾讯元宝" onAction="dropDownOnAction" getImage="GetImage" visible="true" size="large" />   
@@ -35,6 +35,9 @@
                       <button id="btnZoteroSet" label="Zotero-Set" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />   
                 </menu>
                       <button id="btnAbout" label="About" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />
+
+                       <button id="btnHelp" label="Help" onAction="SettingsOnAction" getImage="GetImage" visible="true" size="large" />
+                      
                 </group>
             </tab>
         </tabs>

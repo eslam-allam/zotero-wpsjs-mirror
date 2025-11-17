@@ -20,7 +20,7 @@ function zc_alert(msg) {
 /**
  * Callback for plugin loading.
 **/
- function OnAddinLoad(ribbonUI) {
+function OnAddinLoad(ribbonUI) {
     if (typeof (wps.Enum) !== "object") {
         wps.Enum = WPS_Enum;
         zc_alert('You are using an old version of WPS, this plugin might not work properly!');
@@ -42,15 +42,15 @@ function zc_alert(msg) {
     //console.log("系统信息：" + osInfo)
     let settingsJson = getSettingsJson(osInfo);
 
-    const addonpath=getAddonPath(osInfo)
-   
+    const addonpath = getAddonPath(osInfo)
+
     //console.log("配置文件" + settingsJson)
-     const dotmPath = addonpath + `/Zotero-Jsa.dotm`
+    const dotmPath = addonpath + `/Zotero-Jsa.dotm`
     if (!window.Application.FileSystem.Exists(dotmPath)) {
         alert("Zotero-wps核心文件丢失，请卸载插件，重新安装！！")
 
     }
-   
+
     Application.AddIns.Add(dotmPath, true)
     Application.AddIns.Item("Zotero-Jsa.dotm").Installed = true
     if (settingsJson.zoteroSwitch) {
@@ -101,13 +101,13 @@ function zc_alert(msg) {
 
     }
 
-     //文档关闭检测
+    //文档关闭检测
     wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
 
-      if(  window.Application.PluginStorage.getItem("btnClick")){
-        alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
-        window.Application.ApiEvent.Cancel=true
-      }
+        if (window.Application.PluginStorage.getItem("btnClick")) {
+            alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
+            window.Application.ApiEvent.Cancel = true
+        }
 
 
     });
@@ -132,11 +132,11 @@ function OnAction(control) {
         "btnAddNote": () => executeWithLock(() => Application.Run("btnInsertNote")),
         "btnDonate": () => {
             window.Application.ShowDialog(
-                GetUrlPath() + "/ui/Donate.html", 
-                "捐赠", 
-                700 * window.devicePixelRatio, 
-                640 * window.devicePixelRatio, 
-                true, 
+                GetUrlPath() + "/ui/Donate.html",
+                "捐赠",
+                700 * window.devicePixelRatio,
+                640 * window.devicePixelRatio,
+                true,
                 true
             );
         }
@@ -147,7 +147,7 @@ function OnAction(control) {
         action();
         return true;
     }
-    
+
     return false;
 }
 
@@ -159,7 +159,7 @@ function executeWithLock(operation) {
         alert("正在操作zotero，请点击zotero完成操作！！");
         return;
     }
-    
+
     try {
         window.Application.PluginStorage.setItem("btnClick", true);
         operation();
@@ -260,7 +260,9 @@ function SettingsOnAction(selectedId) {
         case "btnZoteroSet":
             window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, false, true)
             break;
-
+        case "btnHelp":
+            window.Application.ShowDialog(GetUrlPath() + "/ui/Help.html", "帮助", 800 * window.devicePixelRatio, 650 * window.devicePixelRatio, true, true)
+            break;
 
         default:
     }

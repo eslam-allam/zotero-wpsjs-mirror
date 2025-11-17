@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帮助中心 - Zotero-Jsa</title>
+    <style>
+              :root {
+            --primary-color: #95a5f0;
+            --secondary-color: #7d91e8;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --footer-color: #1a237e;
+            --footer-gradient: linear-gradient(135deg, #95a5f0, #95a5f0);
+            --success-color: #4bb543;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 7px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-bar button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* 导航样式 */
+        nav {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .nav-item {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .nav-item.active, .nav-item:hover {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        /* 主内容区样式 */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 120px;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        /* 教程模块样式 */
+        .tutorials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tutorial-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .tutorial-image {
+            height: 160px;
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        .tutorial-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tutorial-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+
+        .tutorial-description {
+            color: #666;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .tutorial-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .tutorial-button {
+            display: block;
+            text-align: center;
+            background: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .tutorial-button:hover {
+            background: var(--secondary-color);
+        }
+
+        /* 视频容器样式 */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 宽高比 */
+            height: 0;
+            overflow: hidden;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* FAQ模块样式 */
+        .faq-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #eee;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: #f9f9f9;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-question::after {
+            content: '-';
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 500px;
+        }
+
+        /* 页脚样式 - 减小高度 */
+        footer {
+            background: var(--footer-gradient);
+            color: white;
+            padding: 1.5rem 0; /* 减小上下内边距 */
+            margin-top: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+   
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-info {
+           
+            font-size: 1rem; /* 减小字体大小 */
+        }
+
+        .contact-info p {
+            margin: 0.3rem 0; /* 减小段落间距 */
+        }
+
+        .copyright {
+            margin-top: 1rem; /* 减小上边距 */
+            font-size: 0.9rem; /* 减小字体大小 */
+            opacity: 0.9;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 0.8rem; /* 减小上内边距 */
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem; /* 减小间距 */
+            margin-top: 0.8rem; /* 减小上边距 */
+        }
+
+        .social-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem; /* 减小内边距 */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            transition: var(--transition);
+            font-size: 0.9rem; /* 减小字体大小 */
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 767px) {
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .nav-item {
+                text-align: center;
+                padding: 0.8rem 1rem;
+            }
+            
+            .tutorials-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            /* 移动端进一步减小页脚高度 */
+            footer {
+                padding: 1rem 0;
+            }
+            
+            .contact-info {
+                margin: 0.8rem 0;
+                font-size: 0.9rem;
+            }
+            
+            .copyright {
+                margin-top: 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Zotero-Jsa 使用帮助</div>
+               
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <nav>
+            <div class="nav-container">
+                <div class="nav-item active">在线教程</div>
+                <div class="nav-item">常见问题</div>
+                <div class="nav-item">联系我们</div>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <!-- 在线教程模块在上方 -->
+            <section class="tutorials-section">
+                <h2 class="section-title">在线教程</h2>
+                <div class="tutorials-grid">
+                    <div class="tutorial-card">
+                     
+                        <div class="tutorial-content">
+                            <h3 class="tutorial-title">使用教程</h3>
+                            <div class="video-container">
+                                <iframe src="https://player.bilibili.com/player.html?isOutside=true&aid=114806086506798&bvid=BV1Zg3izrE3W&cid=30884823923&p=1" 
+                                         scrolling="no" 
+                                        border="0" 
+                                        frameborder="no" 
+                                        framespacing="0" 
+                                        allowfullscreen="true"
+                                        sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+                            </div>
+                            <p class="tutorial-description">了解插件的基本功能和使用方法，快速上手使用(双击放大观看)。</p>
+                            <div class="tutorial-meta">
+                                <span>时长: 10分钟</span>
+                          
+                            </div>
+    <button onclick="wps.TabPages.OpenWebUrl('https://www.bilibili.com/video/BV1Zg3izrE3W/?share_source=copy_web&vd_source=48a203ee1a664db08b44d6ca3a029955')" class="tutorial-button">前往B站观看</button>
+                        </div>
+                    </div>
+
+        
+
+                    <div class="tutorial-card">
+                        
+                        <div class="tutorial-content">
+                            <h3 class="tutorial-title">故障排除</h3>
+                            <p class="tutorial-description">解决常见问题和错误，确保插件稳定运行。</p>
+                            <div class="tutorial-meta">
+                                <span>时长: 25分钟</span>
+                            
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 常见问题模块在下方 -->
+            <section class="faq-section">
+                <h2 class="section-title">常见问题</h2>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">如何反馈bug？</div>
+                        <div class="faq-answer">
+                            <p>联系作者 初心不忘 QQ 897081475 微信 wr900705。</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">如何卸载插件？</div>
+                        <div class="faq-answer">
+                            <p>1、依次点击插件菜单中的 About -->卸载插件。2、运行项目文件夹内的unInstall相关程序。</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">插件支持哪些平台？</div>
+                        <div class="faq-answer">
+                            <p>本插件支持：Mac/Win/Linux</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">插件报错无法使用如何处理？</div>
+                        <div class="faq-answer">
+                            <p>右键退出zotero和wps，然后重新打开两个软件，再次尝试使用</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question">样式不符合预期该如何处理？</div>
+                        <div class="faq-answer">
+                            <p>样式是由zotero的样式文件所定义，插件无法处理，请下载合适的样式</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+         <section class="faq-section">
+        <div class="container">
+            <div class="footer-content">
+                <div class="contact-info">
+                    <p><strong>联系作者: 初心不忘</strong></p>
+                    <p>QQ: 897081475 | 微信: wr900705</p>
+                </div>
+                <div class="social-links">
+                    <a href="https://gitee.com/wangrui5015/Zotero-WPSJS" class="social-link">gitee</a>
+                </div>
+            </div>
+        </div>
+        </section>
+    </footer>
+
+    <script>
+        // FAQ手风琴功能实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    // 切换当前项的激活状态
+                    const isActive = item.classList.contains('active');
+                    
+                    // 关闭所有其他FAQ项
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // 切换当前项的状态
+                    if (!isActive) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            });
+            
+            // 导航菜单激活状态
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('section');
+            
+            navItems.forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 滚动到对应部分
+                    if (index < sections.length) {
+                        sections[index].scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+            
+            // 搜索功能
+            const searchButton = document.querySelector('.search-bar button');
+            searchButton.addEventListener('click', function() {
+                const searchInput = document.querySelector('.search-bar input');
+                if (searchInput.value.trim() !== '') {
+                    // 在实际应用中这里应执行搜索逻辑
+                    alert('搜索: ' + searchInput.value);
+                    // 可以添加实际的搜索功能
+                }
+            });
+            
+            // 回车键搜索
+            const searchInput = document.querySelector('.search-bar input');
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchButton.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
