@@ -11,7 +11,7 @@ Zotero-jsa加载项，一款**学术论文管理软件Zotero** 和**WPS文字**�
 
 ## 2.软件架构
 
-[WPS-JS](https://open.wps.cn/previous/docs/client/js-api/introduce)
+[WPS-JS](https://open.wps.cn/previous/docs/client/js-api/introduce)和Python
 	
 ## 3.使用说明
 
