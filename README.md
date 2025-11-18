@@ -45,7 +45,7 @@ Zotero相关使用教程https://zotero-chinese.com/user-guide/
 
    2.全局设置 → 设置 → 关闭 '沙箱保护'(win)
 
-   3. 工具 → 宏安全性 → 将安全等级设为低(win/mac/linux)
+   3.工具 → 宏安全性 → 将安全等级设为低(win/mac/linux)
 
    4.工具 → 开发工具 → WPS宏编辑器 → 工具 → 选项 → 取消编译参数下的2个勾选(win/mac/linux)
 
@@ -67,7 +67,7 @@ Zotero相关使用教程https://zotero-chinese.com/user-guide/
 
    2.全局设置 → 设置 → 关闭 '沙箱保护'(win)
 
-   3. 工具 → 宏安全性 → 将安全等级设为低(win/mac/linux)
+   3.工具 → 宏安全性 → 将安全等级设为低(win/mac/linux)
 
    4.工具 → 开发工具 → WPS宏编辑器 → 工具 → 选项 → 取消编译参数下的2个勾选(win/mac/linux)
 
@@ -89,7 +89,7 @@ python3 install.py
 
    2.全局设置 → 设置 → 关闭 '沙箱保护'(win)
 
-   3. 工具 → 宏安全性 → 将安全等级设为低(win/mac/linux)
+   3.工具 → 宏安全性 → 将安全等级设为低(win/mac/linux)
 
    4.工具 → 开发工具 → WPS宏编辑器 → 工具 → 选项 → 取消编译参数下的2个勾选(win/mac/linux)
 
