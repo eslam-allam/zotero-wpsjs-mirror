@@ -15,7 +15,7 @@ Zotero-jsa加载项，一款**学术论文管理软件Zotero** 和**WPS文字**�
 	
 ## 3.使用说明
 
-本插件需要用户的授权才能正常使用。
+本插件需要用户的授权才能正常使用。授权图文教程 [图文教程](https://www.yuque.com/yuqueyonghucakfnw/vh714w/spy0ahqbvgc2u617?singleDoc#%20)
 
 
 **Mac**端用户注意：
