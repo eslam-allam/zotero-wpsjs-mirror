@@ -189,6 +189,8 @@ function GetImage(control) {
             return "images/Donate.png";
         case "btnAbout":
             return "images/about.png";
+        case "btnHelp":
+            return "images/help.png";
         case "btnZoteroSet":
             return "images/zoteroSet.png";
         case "menu1":
