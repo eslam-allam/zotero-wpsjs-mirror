@@ -59,9 +59,9 @@ function OnAddinLoad(ribbonUI) {
     }
     if (settingsJson.citationPreview) {
         wps.ApiEvent.AddApiEventListener("WindowSelectionChange", () => {
-            let unlinking = window.Application.PluginStorage.getItem("unlink")
-            let footnotes = window.Application.PluginStorage.getItem("footnotes")
-            if (unlinking || footnotes) {
+            const btnClicking = window.Application.PluginStorage.getItem("btnClick")
+
+            if (btnClicking) {
                 return
             }
             if (window.Application.Selection.Fields.Count == 0 && window.Application.ActiveDocument.Footnotes.Count == 0) {
@@ -74,7 +74,6 @@ function OnAddinLoad(ribbonUI) {
             }
 
             if (window.Application.Selection.Fields.Count >= 1) {
-
                 const tl = window.Application.ActiveDocument.ActiveWindow.GetPoint(window.Application.Selection.Range)
 
                 let myRange = window.Application.Selection.Fields.Item(1).Code.Text
@@ -82,38 +81,39 @@ function OnAddinLoad(ribbonUI) {
                 if (hasCitation) {
                     if (!settingsJson.mouseFollow) {
                         citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
-
-                        return
-                    }
-                    const topFlag = window.Application.PluginStorage.getItem("topTo")
-                    if (topFlag) {
-                        return
-                    }
-                    window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "引注预览", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 30) * window.devicePixelRatio)
-
+     
+                    
+                    return
                 }
+                const topFlag = window.Application.PluginStorage.getItem("topTo")
+                if (topFlag) {
+                    return
+                }
+                window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "引注预览", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 30) * window.devicePixelRatio)
 
             }
+
+        }
 
         });
 
 
 
+}
+
+//文档关闭检测
+wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
+
+    if (window.Application.PluginStorage.getItem("btnClick")) {
+        alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
+        window.Application.ApiEvent.Cancel = true
     }
 
-    //文档关闭检测
-    wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
 
-      if(  window.Application.PluginStorage.getItem("btnClick")){
-        alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
-        window.Application.ApiEvent.Cancel=true
-      }
+});
 
 
-    });
-
-
-    return true;
+return true;
 }
 /**
  * Callback for button clicking events.
@@ -132,11 +132,11 @@ function OnAction(control) {
         "btnAddNote": () => executeWithLock(() => Application.Run("btnInsertNote")),
         "btnDonate": () => {
             window.Application.ShowDialog(
-                GetUrlPath() + "/ui/Donate.html", 
-                "捐赠", 
-                700 * window.devicePixelRatio, 
-                640 * window.devicePixelRatio, 
-                true, 
+                GetUrlPath() + "/ui/Donate.html",
+                "捐赠",
+                700 * window.devicePixelRatio,
+                640 * window.devicePixelRatio,
+                true,
                 true
             );
         }
@@ -147,7 +147,7 @@ function OnAction(control) {
         action();
         return true;
     }
-    
+
     return false;
 }
 
@@ -159,7 +159,7 @@ function executeWithLock(operation) {
         alert("正在操作zotero，请点击zotero完成操作！！");
         return;
     }
-    
+
     try {
         window.Application.PluginStorage.setItem("btnClick", true);
         operation();
@@ -190,7 +190,7 @@ function GetImage(control) {
             return "images/Donate.png";
         case "btnAbout":
             return "images/about.png";
-            case "btnHelp":
+        case "btnHelp":
             return "images/help.png";
         case "btnZoteroSet":
             return "images/zoteroSet.png";
@@ -264,7 +264,7 @@ function SettingsOnAction(selectedId) {
             window.Application.ShowDialog(GetUrlPath() + "/ui/ZoteroSet.html", "Zotero设置", 500 * window.devicePixelRatio, 450 * window.devicePixelRatio, true, true)
             break;
 
-  case "btnHelp":
+        case "btnHelp":
             window.Application.ShowDialog(GetUrlPath() + "/ui/Help.html", "帮助", 800 * window.devicePixelRatio, 650 * window.devicePixelRatio, true, true)
             break;
         default:

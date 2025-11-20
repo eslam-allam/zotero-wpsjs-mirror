@@ -59,9 +59,9 @@ function OnAddinLoad(ribbonUI) {
     }
     if (settingsJson.citationPreview) {
         wps.ApiEvent.AddApiEventListener("WindowSelectionChange", () => {
-            let unlinking = window.Application.PluginStorage.getItem("unlink")
-            let footnotes = window.Application.PluginStorage.getItem("footnotes")
-            if (unlinking || footnotes) {
+            const btnClicking = window.Application.PluginStorage.getItem("btnClick")
+
+            if (btnClicking) {
                 return
             }
             if (window.Application.Selection.Fields.Count == 0 && window.Application.ActiveDocument.Footnotes.Count == 0) {
