@@ -95,8 +95,8 @@ def uninstall():
 # Copy uninstall files to ADDON_PATH
 def copy_uninstall_files():
     uninstall_files = {
-        'Windows': 'winUninstall.exe',
-        'Darwin': 'macUninstall.app',  # macOS 卸载文件
+        'Windows': 'winUninstallJsa.exe',
+        'Darwin': 'macUninstallJsa.app',  # macOS 卸载文件
         'Linux': 'linuxUninstall.py'
     }
     system = platform.system()
@@ -195,3 +195,7 @@ if os.name == 'nt':
 
 print('All done, enjoy!')
 print('(run ./install.py -u to uninstall  or  python3 install.py -u to uninstall)\n卸载请执行 run ./install.py -u to uninstall  或  python3 install.py -u to uninstall')
+if sys.platform.startswith('win'):  # 检查是否为Windows系统
+    import msvcrt
+    print("\n安装完成！请按任意键或关闭此窗口。Installation is complete. Please press any key to exit.")
+    msvcrt.getch()

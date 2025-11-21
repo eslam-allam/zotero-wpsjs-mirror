@@ -43,10 +43,10 @@ async function onbuttonclick(idStr) {
                     window.Application.ActiveDocument.Save()
 
 
+   Application.AddIns.Item("Zotero-Jsa.dotm").Installed = false
 
 
-
-                    runServers("uninstallZoteroAddin", wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/winUninstall.exe', 'jsMaximizedFocus');
+                    runServers("uninstallZoteroAddin", wps.Env.GetAppDataPath() + '/kingsoft/wps/jsaddons/winUninstallJsa.exe', 'jsMaximizedFocus');
                     const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
                     if (window.Application.FileSystem.Exists(tmpJson)) {
                         window.Application.FileSystem.Remove(tmpJson)
