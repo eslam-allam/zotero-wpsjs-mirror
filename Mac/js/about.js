@@ -52,7 +52,8 @@ async function onbuttonclick(idStr) {
                     return;
                 } else if (osInfo == "macos") {
                     window.Application.ActiveDocument.Save()
-                    const uninstallPath = wps.Env.GetHomePath() + '/.kingsoft/wps/jsaddons/macUninstall.app';
+                    Application.AddIns.Item("Zotero-Jsa.dotm").Installed = false
+                    const uninstallPath = wps.Env.GetHomePath() + '/.kingsoft/wps/jsaddons/macUninstallJsa.app';
                     if (window.Application.FileSystem.Exists(uninstallPath)) {
                         runServers("uninstallZoteroAdd", 'open ' + uninstallPath, 'jsMaximizedFocus');
                     } else {

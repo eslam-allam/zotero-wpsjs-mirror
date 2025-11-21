@@ -96,7 +96,7 @@ def uninstall():
 def copy_uninstall_files():
     uninstall_files = {
         'Windows': 'winUninstall.exe',
-        'Darwin': 'macUninstall.app',  # macOS 卸载文件
+        'Darwin': 'macUninstallJsa.app',  # macOS 卸载文件
         'Linux': 'linuxUninstall.py'
     }
     system = platform.system()
