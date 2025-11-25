@@ -80,9 +80,11 @@ function OnAddinLoad(ribbonUI) {
                 const hasCitation = myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
                 if (hasCitation) {
                     if (!settingsJson.mouseFollow) {
+                        
+                 
                         citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
-     
-                    
+
+                   
                     return
                 }
                 const topFlag = window.Application.PluginStorage.getItem("topTo")
