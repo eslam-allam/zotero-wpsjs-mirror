@@ -1,2 +1,2 @@
-const VERSION = '1.6.8-Jsa'
+const VERSION = '1.6.10-Jsa'
 

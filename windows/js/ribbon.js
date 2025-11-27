@@ -80,42 +80,42 @@ function OnAddinLoad(ribbonUI) {
                 const hasCitation = myRange.includes('ADDIN ZOTERO_ITEM CSL_CITATION');
                 if (hasCitation) {
                     if (!settingsJson.mouseFollow) {
-                        
-                 
-                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
 
-                   
-                    return
+
+                        citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
+                        window.Application.ShowDialogEx(GetUrlPath() + "/ui/RefreshWPS.html", "修复快捷键", 1, 1, false, false)
+
+                        return
+                    }
+                    const topFlag = window.Application.PluginStorage.getItem("topTo")
+                    if (topFlag) {
+                        return
+                    }
+                    window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "引注预览", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 30) * window.devicePixelRatio)
+
                 }
-                const topFlag = window.Application.PluginStorage.getItem("topTo")
-                if (topFlag) {
-                    return
-                }
-                window.Application.ShowDialogEx(GetUrlPath() + "/ui/CitationPreviewMouse.html", "引注预览", 400 * window.devicePixelRatio, 380 * window.devicePixelRatio, false, false, false, true, true, false, true, (tl.ScreenPixelsLeft - 10) * window.devicePixelRatio, (tl.ScreenPixelsTop - 30) * window.devicePixelRatio)
 
             }
-
-        }
 
         });
 
 
 
-}
-
-//文档关闭检测
-wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
-
-    if (window.Application.PluginStorage.getItem("btnClick")) {
-        alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
-        window.Application.ApiEvent.Cancel = true
     }
 
+    //文档关闭检测
+    wps.ApiEvent.AddApiEventListener("DocumentBeforeClose", () => {
 
-});
+        if (window.Application.PluginStorage.getItem("btnClick")) {
+            alert("当前文档无法关闭:zotero正在操作，请点击zotero完成相关操作！！")
+            window.Application.ApiEvent.Cancel = true
+        }
 
 
-return true;
+    });
+
+
+    return true;
 }
 /**
  * Callback for button clicking events.

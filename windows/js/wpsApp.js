@@ -72,11 +72,7 @@ function citationPreviewUi(url, taskpaneId,title) {
         tskpane.Visible = true
         return
     }
-        let tskpaneDel = window.Application.GetTaskPane(tsId)
-        tskpaneDel.Delete()
-      let tskpane = window.Application.CreateTaskPane(url + "",title)
-        let id = tskpane.ID
-         tskpane.MinWidth=450 * window.devicePixelRatio
-        window.Application.PluginStorage.setItem(taskpaneId + "", id)
+        let tskpane = window.Application.GetTaskPane(tsId)
         tskpane.Visible = true
+        tskpane.Navigate(url+"")
 }
