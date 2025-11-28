@@ -82,8 +82,8 @@ function OnAddinLoad(ribbonUI) {
                 if (hasCitation) {
                     if (!settingsJson.mouseFollow) {
                         citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
-                        //修复 快捷键复制删除域代码问题
-                        window.Application.ShowDialog(GetUrlPath() + "/ui/RefreshWPS.html", "修复快捷键", 1, 1, false, false)
+                
+                       
                         return
                     }
                     const topFlag = window.Application.PluginStorage.getItem("topTo")
