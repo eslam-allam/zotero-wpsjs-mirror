@@ -83,7 +83,7 @@ function OnAddinLoad(ribbonUI) {
 
 
                         citationPreviewUi(GetUrlPath() + "/ui/CitationPreview.html", "citationPreview", "引注预览")
-                        window.Application.ShowDialogEx(GetUrlPath() + "/ui/RefreshWPS.html", "修复快捷键", 1, 1, false, false)
+                     
 
                         return
                     }
