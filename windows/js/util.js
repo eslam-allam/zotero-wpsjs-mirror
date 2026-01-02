@@ -42,43 +42,54 @@ function getAddonPath(osInfo) {
 /**
  * 
  * @param {*} osInfo 系统信息
- * @returns 配置文件json对象
+ * @returns 
  */
-function getSettingsJson(osInfo) {
-    try {
-   
-   const jsonPath = getAddonPath(osInfo) + '/settings.json'
+function setTmpSettingsJson(osInfo) {
+
+
+    const jsonPath = getAddonPath(osInfo) + '/settings.json'
     //console.log("json路径“："+jsonPath)
     if (!window.Application.FileSystem.Exists(jsonPath)) {
         alert("配置文件不存在！")
         return null;
     }
-   
-    const tmpJson=window.Application.Env.GetTempPath()+"/settings.json"
+
+    const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
     //console.log("开始读取配置文件，home路径为"+tmpJson)
-    if(!window.Application.FileSystem.Exists(tmpJson)){
-        
+
+    try {
         const tmp = window.Application.FileSystem.ReadFile(jsonPath)
         window.Application.FileSystem.WriteFile(tmpJson, tmp);
-        return;
-    }
-    try {
-        const res=window.Application.FileSystem.ReadFile(tmpJson)
-        const jsonObject = JSON.parse(res)
-     
-        return jsonObject;
- 
     } catch (error) {
-        console.error("解析json出错，请检查json数据格！", error);
-        return null; 
+        console.error("写入配置文件错误！", error);
+        return null
     }
-  
- 
 
-} catch (error) {
-    console.error("读取配置文件失败！", error);
-    return null; // 返回 null 表示发生错误
 }
+/**
+ * 
+ * 
+ * @returns 配置文件json对象
+ */
+function getSettingsJson() {
+    try {
+        const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
+        //console.log("json路径“："+jsonPath)
+        if (!window.Application.FileSystem.Exists(tmpJson)) {
+            alert("配置文件不存在！")
+            return null;
+        }
+
+        //console.log("开始读取配置文件，home路径为"+tmpJson)
+            const res = window.Application.FileSystem.ReadFile(tmpJson)
+            const jsonObject = JSON.parse(res)
+
+            return jsonObject;
+
+    } catch (error) {
+        console.error("读取配置文件失败！", error);
+        return null; // 返回 null 表示发生错误
+    }
 }
 /**
  * 
@@ -87,14 +98,14 @@ function getSettingsJson(osInfo) {
  */
 function setSettingsJson(updatedJsonString) {
     try {
-        
-        const jsonString =  JSON.stringify(updatedJsonString);
-     //alert("更新数据为"+jsonString)
+
+        const jsonString = JSON.stringify(updatedJsonString);
+        //alert("更新数据为"+jsonString)
         // 写入文件
-          const tmpJson=window.Application.Env.GetTempPath()+"/settings.json"
-        console.log("json路径："+tmpJson)
-         window.Application.FileSystem.WriteFile(tmpJson, jsonString);
-       
+        const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
+        console.log("json路径：" + tmpJson)
+        window.Application.FileSystem.WriteFile(tmpJson, jsonString);
+
     } catch (error) {
         console.error("写入配置文件错误！", error);
     }

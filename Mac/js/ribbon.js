@@ -40,9 +40,14 @@ function OnAddinLoad(ribbonUI) {
     //系统检测
     const osInfo = detectOS();
     //console.log("系统信息：" + osInfo)
-    let settingsJson = getSettingsJson(osInfo);
-
     const addonpath = getAddonPath(osInfo)
+    const tmpJson = window.Application.Env.GetTempPath() + "/settings.json"
+    //console.log("json路径“："+tmpJson)
+    if (!window.Application.FileSystem.Exists(tmpJson)) {
+        setTmpSettingsJson(osInfo)
+    }
+
+    let settingsJson = getSettingsJson();
 
     //console.log("配置文件" + settingsJson)
     const dotmPath = addonpath + `/Zotero-Jsa.dotm`

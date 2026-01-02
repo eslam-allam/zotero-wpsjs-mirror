@@ -2,7 +2,7 @@
 
 function setZoteroPath() {
     const osInfo = detectOS();
-    let settingsJson = getSettingsJson(osInfo);
+    let settingsJson = getSettingsJson();
     const fso = window.Application.FileDialog(3)
     fso.Title = "请选择zotero程序"
 

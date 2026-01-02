@@ -62,7 +62,7 @@ function checkAndRunZotero() {
     if (os!=="windows") {
         return;
     }
-    let settingsJson=getSettingsJson(os);
+    let settingsJson=getSettingsJson();
     const zoteroSwitchValue=settingsJson.zoteroPath[os];
    
         runZotero(os,zoteroSwitchValue);
