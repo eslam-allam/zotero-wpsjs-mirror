@@ -244,19 +244,20 @@ function dropDownOnAction(selectedId) {
             handAi("https://chatglm.cn/", "zhipuqingyan")
             break;
         case "tongyiItem":
-            handAi("https://tongyi.aliyun.com/qianwen/", "tongyi")
+            handAi("https://www.qianwen.com/", "tongyi")
             break;
         case "doubaoItem":
             handAi("https://www.doubao.com/chat/", "doubao")
             break;
         case "kimiItem":
-            handAi("https://kimi.moonshot.cn//", "Kimi")
+            handAi("https://www.kimi.com/", "Kimi")
 
 
         default:
     }
     return true;
 }
+
 function SettingsOnAction(selectedId) {
     const eleId = selectedId.Id
     switch (eleId) {
