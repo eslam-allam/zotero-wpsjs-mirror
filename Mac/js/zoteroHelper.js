@@ -1,28 +1,4 @@
 
-
-/**
- * 
- * @param {*} osInfo 系统标识
- * @returns 无
- */
-function runProxy(osInfo){
-    const addonPath=getAddonPath(osInfo)
-    if (osInfo== "windows") {
-        
-        runServers("runProxy", addonPath+'/proxy.exe', 'jsHide');
-       
-        return;
-        
-    } else if (osInfo== "linux") {
-        runServers("runProxy", addonPath+'/runPY.sh', 'jsHide');
-       
-        return;
-       
-    }  
-
-    runServers("runProxy", 'open '+addonPath+'/proxy.app', 'jsHide');
-        return;
-}
 /**
  * 
  * @param {*} osInfo 系统标识
