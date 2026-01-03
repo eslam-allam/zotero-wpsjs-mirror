@@ -1,30 +1,10 @@
-// Shouldn't be needing this if using the latest version of WPS
-const WPS_Enum = {
-    msoCTPDockPositionLeft: 0,
-    msoCTPDockPositionRight: 2,
-    msoPropertyTypeString: 4,
-    wdAlignParagraphJustify: 3,
-    wdAlignTabLeft: 0,
-    wdCharacter: 1,
-    wdCollapseEnd: 0,
-    wdCollapseStart: 1,
-    wdFieldAddin: 81,
-    wdLineBreak: 6,
-    wdParagraph: 4
-};
 
-function zc_alert(msg) {
-    alert(`WPS-Zotero: ${msg}`);
-};
 
 /**
  * Callback for plugin loading.
 **/
 function OnAddinLoad(ribbonUI) {
-    if (typeof (wps.Enum) !== "object") {
-        wps.Enum = WPS_Enum;
-        zc_alert('You are using an old version of WPS, this plugin might not work properly!');
-    }
+ 
     if (typeof (wps.ribbonUI) !== "object") {
         wps.ribbonUI = ribbonUI;
     }
